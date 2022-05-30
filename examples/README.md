@@ -1,17 +1,31 @@
 # Application examples
 
-In this folder are provided application examples for the HA in the following
-programming languages:
+We provide application examples in the following programming languages:
 
  - Python
  - Golang
  - Java
 
-Each example is a small and isolated application that can be execute with any
-additional dependency or configuration.
 
-Under any language folder you'll find a README file that explains how to install
-and run the related application.
+# Applications commands
 
-In case you want a more straightforward way to configure one or all the
-applications, please refer to the *orchestrate* section of this project.
+All applications behave in the same way and all of them are CLI applications
+with the same commands. Their purpose is to show how the *cx_Oracle* driver
+can be used in different programming languages to achieve the **HA**.
+
+
+## The interactive prompt
+
+A interactive prompt to send command to the service manually can be started with
+the *human* command:
+
+    oracle-ha human --help
+
+
+## The automatic interface
+
+All the other commands are job to fire:
+
+    oracle-ha insert --help
+    oracle-ha update --help
+    oracle-ha delete --help

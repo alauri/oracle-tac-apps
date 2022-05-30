@@ -2,21 +2,27 @@
 
 In general:
 
->  Availability is the degree to which an application and database service is available[^1]
+> Availability is the degree to which an application and database service is
+> available[^1]
 
-Users, and developers, really want their systems are always ready to provide
-information and because of this they need the **High Availability (HA)**.
+All users want their systems always relaible and ready to return information
+and this can be achieved only with the **Hight Availability (HA)**.
 
-In this project you can find examples of HA in different programming languages
-alongside systems orchestration to setup working environments for demonstrative
-purposes.
+# Project history
 
+We created this project to show how the HA can impact client applications
+connected to Oracle databases.
 
-## Project structure
+This project wants to show the same code, but in different programming
+languages, taking advantage of the HA by using the **Oracle CX** driver.
 
-This project is organized into examples in different programming languages under
-the folder **examples** and a configuration management tool with Ansible[^2]
-under the folder **orchestrate**.
+## The structure
+
+Under the folder **examples** there are dimonstrative applications grouped by
+programming language.
+
+Folder **orchestration** gives you the possibility to set up a working remote
+environment with Ansible[^2].
 
 
 [^1]: https://docs.oracle.com/en/database/oracle/oracle-database/19/haovw/overview-of-ha.html
