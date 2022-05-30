@@ -1,9 +1,18 @@
 [tool.poetry]
-name = "oracle-ha"
+name = "oracle-ha-app"
 version = "0.1.0"
 description = "A Python application for the High Availability in Oracle"
 authors = ["Andrea Lauri <andrea.lauri86@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "oha" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+
+    "Operating System :: POSIX :: Linux",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
