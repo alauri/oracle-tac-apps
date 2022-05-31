@@ -6,6 +6,6 @@ import click
 
 @click.command()
 def delete() -> None:
+    """Delete records from the table.
     """
-    """
-    click.echo("Command delete")
+    click.echo("delete called")

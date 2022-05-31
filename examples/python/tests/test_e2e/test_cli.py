@@ -7,6 +7,17 @@
 from oha import cli
 
 
+def test_root(runner) -> None:
+    """Invoke the CLI with no commands.
+
+    Returns:
+        Nothing
+    """
+    result = runner.invoke(cli.cli, [])
+    assert result.exit_code == 0
+    assert result.output == "root called\n"
+
+
 def test_config(runner) -> None:
     """Invoke the command ``config``.
 
@@ -15,6 +26,7 @@ def test_config(runner) -> None:
     """
     result = runner.invoke(cli.cli, ["config"])
     assert result.exit_code == 0
+    assert result.output == "root called\nconfig called\n"
 
 
 def test_delete(runner) -> None:
@@ -25,6 +37,7 @@ def test_delete(runner) -> None:
     """
     result = runner.invoke(cli.cli, ["delete"])
     assert result.exit_code == 0
+    assert result.output == "root called\ndelete called\n"
 
 
 def test_insert(runner) -> None:
@@ -35,6 +48,7 @@ def test_insert(runner) -> None:
     """
     result = runner.invoke(cli.cli, ["insert"])
     assert result.exit_code == 0
+    assert result.output == "root called\ninsert called\n"
 
 
 def test_update(runner) -> None:
@@ -45,6 +59,7 @@ def test_update(runner) -> None:
     """
     result = runner.invoke(cli.cli, ["update"])
     assert result.exit_code == 0
+    assert result.output == "root called\nupdate called\n"
 
 
 def test_reset(runner) -> None:
@@ -55,3 +70,4 @@ def test_reset(runner) -> None:
     """
     result = runner.invoke(cli.cli, ["reset"])
     assert result.exit_code == 0
+    assert result.output == "root called\nreset called\n"

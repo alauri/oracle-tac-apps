@@ -6,6 +6,6 @@ import click
 
 @click.command()
 def insert() -> None:
+    """Insert new records into the table.
     """
-    """
-    click.echo("Command insert")
+    click.echo("insert called")
