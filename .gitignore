@@ -1,4 +1,8 @@
-# Python ignore file
+# Python ignore files
 __pycache__
 
 *.pyc
+
+
+# Golang ignore files
+examples/golang/oha/oracle-ha

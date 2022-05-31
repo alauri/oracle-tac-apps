@@ -6,6 +6,6 @@ import click
 
 @click.command()
 def config() -> None:
+    """Configure the application.
     """
-    """
-    click.echo("Command config")
+    click.echo("config called")

@@ -7,7 +7,7 @@
 
 import click
 
-from oha.commands import (
+from oha.cmd import (
     config,
     delete,
     insert,
@@ -18,12 +18,12 @@ from oha.commands import (
 
 @click.group(invoke_without_command=True)
 def cli() -> None:
+    """Oracle High Availability CLI in Python
     """
-    """
-    click.echo("The main command")
+    click.echo("root called")
 
 
-# Register commands later
+# Register commands
 cli.add_command(config)
 cli.add_command(delete)
 cli.add_command(insert)
