@@ -9,9 +9,12 @@ to get advantage of the Oracle High Availability.
 Use **Maven**[^2] to install all the dependencies of the project:
 
     $ cd oha
-    $ mvn compile
+    $ mvn package
 
-This will compile the project with a pre-defined structure by Maven itself.
+This will compile the project with a pre-defined structure by Maven itself. To
+execute the CLI, type the following command:
+
+    $ java -cp "<abs-picocli-jar-path>:<target-jar-path>" com.oha.app.OracleHA --help
 
 
 # Run tests
