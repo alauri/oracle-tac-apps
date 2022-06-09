@@ -20,9 +20,8 @@ import toml
               help="print current stored configurations")
 @click.pass_context
 def config(ctx, info: bool) -> None:
-    """Update sections of the TOML configuration file by calling one of the
-    subcommands
-    """
+    """Update sections of the TOML configuration file"""
+
     # Print current configuration info and exit
     if info:
         click.echo(f"[+] - Current configuration: {ctx.obj.conf}")
@@ -42,7 +41,7 @@ def config(ctx, info: bool) -> None:
               help="update the driver's password")
 @click.pass_obj
 def driver(obj, **kwargs) -> None:
-    """Update section ``driver`` of the TOML configuration file"""
+    """update section 'driver'"""
 
     # Collect only those values different from None and update the TOML file
     updates = {(arg, val) for arg, val in kwargs.items() if val is not None}
@@ -59,7 +58,7 @@ def driver(obj, **kwargs) -> None:
               help="update the database's table")
 @click.pass_obj
 def database(obj, **kwargs) -> None:
-    """Update section ``database`` of the TOML configuration file"""
+    """update section 'database'"""
 
     # Collect only those values different from None and update the TOML file
     updates = {(arg, val) for arg, val in kwargs.items() if val is not None}

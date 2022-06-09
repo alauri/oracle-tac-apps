@@ -6,6 +6,6 @@ import click
 
 @click.command()
 def reset() -> None:
-    """Reset database data to factory.
-    """
-    click.echo("reset called")
+    """Reset database data to factory"""
+
+    click.echo("[+] - Database has been reset")

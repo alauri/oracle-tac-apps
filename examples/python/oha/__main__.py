@@ -2,7 +2,7 @@
 # -*- conding: utf-8 -*-
 
 
-"""Entry point of the Python application."""
+"""Entry point of the Python application"""
 
 
 from oha import cli

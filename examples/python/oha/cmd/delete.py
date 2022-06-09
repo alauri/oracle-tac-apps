@@ -36,7 +36,7 @@ def delete(obj,
            iters: int,
            delay: float,
            commit_every: int) -> None:
-    """Delete records from the table."""
+    """Delete records from the table"""
 
     # Define query parameters
     table = obj.conf["database"]["table"]
