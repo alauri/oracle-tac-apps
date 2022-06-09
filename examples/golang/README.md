@@ -6,14 +6,14 @@ to get advantage of the Oracle High Availability.
 
 # Installation and first execution
 
-Move under the folder **oha** and run:
+To install the CLI move under the folder **oracle-ha** and type:
 
-    $ go build -o oracle-ha
+    $ go install
 
-This will install all the dependencies and create the script *oracle-ha* you
-can use to invoke the CLI:
+This will compile and install the CLI in your Golang's bin folder and make it
+available at system level:
 
-    $ ./oracle-ha --help
+    $ oracle-ha --help
 
 
 # Run tests
