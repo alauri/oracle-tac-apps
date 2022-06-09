@@ -22,8 +22,8 @@ def test_no_args(runner, static) -> None:
                       '[1/1] - COMMIT']
 
 
-def test_iters(runner, static) -> None:
-    """Invoke the command `delete` with the options ``iters``.
+def test_args(runner, static) -> None:
+    """Invoke the command ``delete`` with the options ``iters``.
 
     Returns:
         Nothing
