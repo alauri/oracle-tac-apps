@@ -2,14 +2,38 @@
 
 """Test suite configuration."""
 
+import os
 
 import pytest
-
 
 from click.testing import CliRunner
 
 
-@pytest.fixture
+__all__ = ["get_static"]
+
+
+def get_static() -> str:
+    """Define the absolute path of the static folder.
+
+    Returns:
+        The absolute path of the static folder.
+    """
+    _staticpath = os.path.abspath(os.path.dirname(__file__))
+    _staticpath = os.path.join(_staticpath, "static")
+    return _staticpath
+
+
+@pytest.fixture(scope="session")
+def static() -> str:
+    """Forward the absolute path of the static folder.
+
+    Returns:
+        The absolute path of the static folder.
+    """
+    return get_static()
+
+
+@pytest.fixture(scope="session")
 def runner() -> CliRunner:
     """Instantiate a Click CLI Runner.
 

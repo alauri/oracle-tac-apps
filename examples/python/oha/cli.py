@@ -1,11 +1,16 @@
 #!/usr/bin/python3
 
 
-"""
-"""
+"""A Python application for the High Availability in Oracle"""
 
+
+from typing import Dict
+
+import os
 
 import click
+
+import toml
 
 from oha.cmd import (
     config,
@@ -16,11 +21,35 @@ from oha.cmd import (
 )
 
 
-@click.group(invoke_without_command=True)
-def cli() -> None:
-    """Oracle High Availability CLI in Python
-    """
-    click.echo("root called")
+class OracleHA:
+
+    filename = ""
+
+    def __init__(self, wd: str):
+        OracleHA.filename = os.path.join(os.path.abspath(wd), "config.toml")
+        self.conf = OracleHA.read_toml()
+
+    @staticmethod
+    def read_toml() -> Dict:
+        """Read TOML configuration file
+
+        Returns:
+            Nothing
+        """
+        return toml.load(OracleHA.filename)
+
+
+@click.group()
+@click.option("-w", "--workdir",
+              type=str,
+              default=os.path.join(os.path.dirname(__file__), "../.."),
+              help="the absolute path of the configuration folder")
+@click.pass_context
+def cli(ctx, workdir: str) -> None:
+    """Oracle High Availability CLI in Python"""
+
+    # Initialize Click context with TOML configuration file
+    ctx.obj = OracleHA(workdir)
 
 
 # Register commands

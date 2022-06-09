@@ -1,0 +1,6 @@
+[driver]
+username = "hr"
+password = "hr"
+
+[database]
+table = "table"
