@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-"""Test suite configuration."""
+
+"""Test suite configuration"""
+
 
 import os
 
