@@ -17,6 +17,6 @@ func Test_CommandRoot(t *testing.T) {
     rootCmd.SetArgs([]string{})
 	rootCmd.Execute()
 
-	expected := "root called\n"
-	assert.Equal(t, expected, actual.String())
+	expected := "Use \"oracle-ha [command] --help"
+    assert.Contains(t, actual.String(), expected)
 }

@@ -10,16 +10,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configCmd represents the config command
+
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Configure the application.",
-	Long: `Configure the application.`,
+	Short: "configure the application.",
+	Long: `configure the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Fprintln(cmd.OutOrStdout(), "config called")
 	},
 }
 
+
+var driverCmd = &cobra.Command{
+	Use:   "driver",
+	Short: "update section 'driver'",
+	Long: `update section 'driver'`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
+	},
+}
+
+
+var databaseCmd = &cobra.Command{
+	Use:   "database",
+	Short: "update section 'database'",
+	Long: `update section 'database'`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
+	},
+}
+
+
 func init() {
-	rootCmd.AddCommand(configCmd)
+    configCmd.Flags().Bool("info", false, "print current stored configurations")
+
+    // Register sub-commands
+    configCmd.AddCommand(driverCmd)
+    configCmd.AddCommand(databaseCmd)
 }
