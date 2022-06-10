@@ -21,7 +21,8 @@ This will create a new virtualenv and install the dependencies and the command
 
 To run the tests suite use PyTest[^3]:
 
-    $ go test ./...
+    $ poetry shell
+    $ pytest
 
 
 [^1]: https://oracle.github.io/python-cx_Oracle/
