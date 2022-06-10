@@ -19,7 +19,3 @@ var resetCmd = &cobra.Command{
 		fmt.Fprintln(cmd.OutOrStdout(), "reset called")
 	},
 }
-
-func init() {
-	rootCmd.AddCommand(resetCmd)
-}

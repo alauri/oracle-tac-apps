@@ -19,7 +19,3 @@ var updateCmd = &cobra.Command{
 		fmt.Fprintln(cmd.OutOrStdout(), "update called")
 	},
 }
-
-func init() {
-	rootCmd.AddCommand(updateCmd)
-}

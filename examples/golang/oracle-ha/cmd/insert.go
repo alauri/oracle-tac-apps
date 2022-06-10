@@ -19,7 +19,3 @@ var insertCmd = &cobra.Command{
 		fmt.Fprintln(cmd.OutOrStdout(), "insert called")
 	},
 }
-
-func init() {
-	rootCmd.AddCommand(insertCmd)
-}

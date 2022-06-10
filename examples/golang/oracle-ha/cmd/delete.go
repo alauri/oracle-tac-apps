@@ -19,7 +19,3 @@ var deleteCmd = &cobra.Command{
 		fmt.Fprintln(cmd.OutOrStdout(), "delete called")
 	},
 }
-
-func init() {
-	rootCmd.AddCommand(deleteCmd)
-}
