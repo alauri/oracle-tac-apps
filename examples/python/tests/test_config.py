@@ -44,7 +44,7 @@ def test_info(runner, static) -> None:
     result = runner.invoke(cli, ["-w", static, "config", "--info"])
 
     assert result.exit_code == 0
-    assert "[+] - Current configuration" in result.output
+    assert "Current configuration" in result.output
 
 
 def test_username(runner, static) -> None:
@@ -58,7 +58,7 @@ def test_username(runner, static) -> None:
                                  "--username", "fake"])
 
     assert result.exit_code == 0
-    assert "[+] - Configuration updated" in result.output
+    assert "Configuration updated" in result.output
 
     _toml = OracleHA.read_toml()
     assert _toml["driver"]["username"] == "fake"
@@ -75,7 +75,7 @@ def test_password(runner, static) -> None:
                                  "--password", "fake"])
 
     assert result.exit_code == 0
-    assert "[+] - Configuration updated" in result.output
+    assert "Configuration updated" in result.output
 
     _toml = OracleHA.read_toml()
     assert _toml["driver"]["password"] == "fake"
@@ -92,7 +92,7 @@ def test_table(runner, static) -> None:
                                  "--table", "fake"])
 
     assert result.exit_code == 0
-    assert "[+] - Configuration updated" in result.output
+    assert "Configuration updated" in result.output
 
     _toml = OracleHA.read_toml()
     assert _toml["database"]["table"] == "fake"
