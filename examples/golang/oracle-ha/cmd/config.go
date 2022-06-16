@@ -16,7 +16,12 @@ var configCmd = &cobra.Command{
 	Short: "configure the application.",
 	Long: `configure the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Fprintln(cmd.OutOrStdout(), "config called")
+        infoFlag, _ := cmd.Flags().GetBool("info")
+        if infoFlag {
+            fmt.Fprintln(cmd.OutOrStdout(), "[+] - Current configuration: ")
+        } else {
+           cmd.Help()
+        }
 	},
 }
 
@@ -42,7 +47,15 @@ var databaseCmd = &cobra.Command{
 
 
 func init() {
+    // Config flags
     configCmd.Flags().Bool("info", false, "print current stored configurations")
+
+    // Driver flags
+    driverCmd.Flags().String("username", "", "update the driver's username")
+    driverCmd.Flags().String("password", "", "update the driver's password")
+
+    // Database flags
+    databaseCmd.Flags().String("table", "", "update the database's table")
 
     // Register sub-commands
     configCmd.AddCommand(driverCmd)
