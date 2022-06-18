@@ -45,6 +45,7 @@ def test_info(runner, static) -> None:
 
     assert result.exit_code == 0
     assert "Current configuration" in result.output
+    assert "Usage:" not in result.output
 
 
 def test_username(runner, static) -> None:
