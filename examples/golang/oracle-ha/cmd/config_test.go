@@ -8,6 +8,7 @@ import (
     "io/ioutil"
     "os"
 
+    "github.com/alauri/oracle-ha-apps/oracle-ha/cfg"
     "github.com/stretchr/testify/assert"
 )
 
@@ -43,60 +44,67 @@ func setupSuite(tb testing.TB, st string) func(tb testing.TB, st string) {
 }
 
 func Test_Package(t *testing.T) {
-    threshold := 4
     _, filename, _, _ := runtime.Caller(0)
     static := path.Join(path.Dir(filename), "../static")
 
     teardownSuite := setupSuite(t, static)
 	defer teardownSuite(t, static)
 
-    parametrize := []struct{
-        name string
-        arguments []string
-        target string
-    }{
-        {
-            "Test_No_Args",
-            []string{"-w", static, "config"},
-            "Usage:",
-        },
-        {
-            "Test_Info",
-            []string{"-w", static, "config", "--info"},
-            "Current configuration",
-        },
-        {
-            "Test_Username",
-            []string{"-w", static, "config", "driver", "--username", "fake"},
-            "Configuration updated",
-        },
-        {
-            "Test_Password",
-            []string{"-w", static, "config", "driver", "--password", "fake"},
-            "Configuration updated",
-        },
-        {
-            "Test_Table",
-            []string{"-w", static, "config", "database", "--table", "fake"},
-            "Configuration updated",
-        },
-    }
+    t.Run("Test_No_Args", func(t *testing.T) {
+        actual := new(bytes.Buffer)
 
-    for _, test := range parametrize {
-        t.Run(test.name, func(t *testing.T) {
-            actual := new(bytes.Buffer)
+        rootCmd.SetOut(actual)
+        rootCmd.SetErr(actual)
+        rootCmd.SetArgs([]string{"-w", static, "config"})
+        rootCmd.Execute()
 
-            rootCmd.SetOut(actual)
-            rootCmd.SetErr(actual)
-            rootCmd.SetArgs(test.arguments)
-            rootCmd.Execute()
+        assert.Contains(t, actual.String(), "Usage:")
+    })
 
-            assert.Contains(t, actual.String(), test.target)
-        })
+    t.Run("Test_Info", func(t *testing.T) {
+        actual := new(bytes.Buffer)
 
-        // For sub-commands only
-        if len(test.arguments) > threshold {
-            // assert.Equal(t, "database", test.arguments[3])
-        }
-    }
+        rootCmd.SetOut(actual)
+        rootCmd.SetErr(actual)
+        rootCmd.SetArgs([]string{"-w", static, "config", "--info"})
+        rootCmd.Execute()
+
+        assert.Contains(t, actual.String(), "Current configuration")
+    })
+
+    t.Run("Test_Username", func(t *testing.T) {
+        actual := new(bytes.Buffer)
+
+        rootCmd.SetOut(actual)
+        rootCmd.SetErr(actual)
+        rootCmd.SetArgs([]string{"-w", static, "config", "driver", "--username", "fake"})
+        rootCmd.Execute()
+
+        infile := cfg.ReadTOML(static)
+        assert.Equal(t, "fake", infile.Driver.Username)
+    })
+
+    t.Run("Test_Password", func(t *testing.T) {
+        actual := new(bytes.Buffer)
+
+        rootCmd.SetOut(actual)
+        rootCmd.SetErr(actual)
+        rootCmd.SetArgs([]string{"-w", static, "config", "driver", "--password", "fake"})
+        rootCmd.Execute()
+
+        infile := cfg.ReadTOML(static)
+        assert.Equal(t, "fake", infile.Driver.Password)
+    })
+
+    t.Run("Test_Table", func(t *testing.T) {
+        actual := new(bytes.Buffer)
+
+        rootCmd.SetOut(actual)
+        rootCmd.SetErr(actual)
+        rootCmd.SetArgs([]string{"-w", static, "config", "database", "--table", "fake"})
+        rootCmd.Execute()
+
+        infile := cfg.ReadTOML(static)
+        assert.Equal(t, "fake", infile.Database.Table)
+    })
 }

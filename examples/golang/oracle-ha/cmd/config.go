@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 
+    "github.com/alauri/oracle-ha-apps/oracle-ha/cfg"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,9 @@ var configCmd = &cobra.Command{
 	Short: "configure the application.",
 	Long: `configure the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+        // workdirFlag, _ := cmd.Flags().GetString("workdir")
+        // config := cfg.ReadTOML(workdirFlag)
+        
         infoFlag, _ := cmd.Flags().GetBool("info")
         if infoFlag {
             fmt.Fprintln(cmd.OutOrStdout(), "[+] - Current configuration: ")
@@ -31,7 +35,21 @@ var driverCmd = &cobra.Command{
 	Short: "update section 'driver'",
 	Long: `update section 'driver'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
+        workdirFlag, _ := cmd.Flags().GetString("workdir")
+        username, _ := cmd.Flags().GetString("username")
+        password, _ := cmd.Flags().GetString("password")
+        
+        // Update driver's username if needed
+        if username != "" {
+            cfg.UpdateTOML(workdirFlag, "driver.username", username)
+        }
+        
+        // Update driver's password if needed
+        if password != "" {
+            cfg.UpdateTOML(workdirFlag, "driver.password", password)
+        }
+        
+        fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
 	},
 }
 
@@ -41,7 +59,13 @@ var databaseCmd = &cobra.Command{
 	Short: "update section 'database'",
 	Long: `update section 'database'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
+        workdirFlag, _ := cmd.Flags().GetString("workdir")
+        table, _ := cmd.Flags().GetString("table")
+        
+        // Update database's table if needed
+        if table != "" {
+            cfg.UpdateTOML(workdirFlag, "database.table", table)
+        }
 	},
 }
 
