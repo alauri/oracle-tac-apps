@@ -25,6 +25,7 @@ def config(ctx, info: bool) -> None:
     # Print current configuration info and exit
     if info:
         click.echo(f"[+] - Current configuration: {ctx.obj.conf}")
+        return
 
     if ctx.invoked_subcommand is None:
         click.echo(config.get_help(ctx))

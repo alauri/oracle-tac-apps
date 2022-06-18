@@ -17,12 +17,12 @@ var configCmd = &cobra.Command{
 	Short: "configure the application.",
 	Long: `configure the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-        // workdirFlag, _ := cmd.Flags().GetString("workdir")
-        // config := cfg.ReadTOML(workdirFlag)
+        workdirFlag, _ := cmd.Flags().GetString("workdir")
+        config := cfg.ReadTOML(workdirFlag)
         
         infoFlag, _ := cmd.Flags().GetBool("info")
         if infoFlag {
-            fmt.Fprintln(cmd.OutOrStdout(), "[+] - Current configuration: ")
+            fmt.Fprintf(cmd.OutOrStdout(), "[+] - Current configuration: %s\n", config)
         } else {
            cmd.Help()
         }

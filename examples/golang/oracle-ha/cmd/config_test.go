@@ -70,6 +70,7 @@ func Test_Package(t *testing.T) {
         rootCmd.Execute()
 
         assert.Contains(t, actual.String(), "Current configuration")
+        assert.NotContains(t, actual.String(), "Usage:")
     })
 
     t.Run("Test_Username", func(t *testing.T) {
