@@ -17,10 +17,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-type conds struct {
-    id int
-}
-
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
@@ -34,7 +30,7 @@ var deleteCmd = &cobra.Command{
 
         // Define query parameters
         table := viper.GetViper().GetString("database.table")
-        conditions := conds{0}
+        conditions := Conds{0}
 
         if loop { iters = 0 }
         step := 1
@@ -45,7 +41,7 @@ var deleteCmd = &cobra.Command{
             }
 
             // Prepare query with updated conditions
-            pairs := conds{conditions.id + step}
+            pairs := Conds{conditions.id + step}
             query := fmt.Sprintf("DELETE FROM %s WHERE id=%d", table, pairs.id)
 
             // TODO: replace with call to cx_Oracle driver
