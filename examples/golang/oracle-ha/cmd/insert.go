@@ -1,6 +1,11 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
+Command ``insert`` is used store new records within the db.
+
+It can repeat the same operation in loop or a defined numbers of times. It can
+be possible to define a delay between one operation and the next one and also
+after how many operations commit the changes.
 */
 package cmd
 
@@ -25,7 +30,7 @@ var insertCmd = &cobra.Command{
 
         // Define query parameters
         table := viper.GetViper().GetString("database.table")
-        conditions := conds{0}
+        conditions := Conds{0}
 
         if loop { iters = 0 }
         step := 1
@@ -36,7 +41,7 @@ var insertCmd = &cobra.Command{
             }
 
             // Prepare query with updated conditions
-            pairs := conds{conditions.id + step}
+            pairs := Conds{conditions.id + step}
             query := fmt.Sprintf("INSERT INTO %s(id) VALUES(%d)", table, pairs.id)
 
             // TODO: replace with call to cx_Oracle driver
