@@ -78,6 +78,11 @@ func setupSuite(tb testing.TB, st string) func(tb testing.TB, st string) {
         dst := path.Join(st, "config.toml")
         copyConfiguraton(src, dst)
 	    os.Remove(src)
+
+        // TODO: find a way more elegant to revert conf file's values
+        viper.Set("driver.username", "test")
+        viper.Set("driver.password", "test")
+        viper.Set("database.table", "test")
     }
 }
 
