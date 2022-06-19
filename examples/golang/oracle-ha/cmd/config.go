@@ -7,8 +7,8 @@ package cmd
 import (
 	"fmt"
 
-    "github.com/alauri/oracle-ha-apps/oracle-ha/cfg"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 
@@ -17,12 +17,11 @@ var configCmd = &cobra.Command{
 	Short: "configure the application.",
 	Long: `configure the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-        workdirFlag, _ := cmd.Flags().GetString("workdir")
-        config := cfg.ReadTOML(workdirFlag)
-        
         infoFlag, _ := cmd.Flags().GetBool("info")
+        cfg := viper.GetViper()
+
         if infoFlag {
-            fmt.Fprintf(cmd.OutOrStdout(), "[+] - Current configuration: %s\n", config)
+            fmt.Fprintf(cmd.OutOrStdout(), "[+] - Current configuration: %s\n", cfg.AllSettings())
         } else {
            cmd.Help()
         }
@@ -35,20 +34,22 @@ var driverCmd = &cobra.Command{
 	Short: "update section 'driver'",
 	Long: `update section 'driver'`,
 	Run: func(cmd *cobra.Command, args []string) {
-        workdirFlag, _ := cmd.Flags().GetString("workdir")
         username, _ := cmd.Flags().GetString("username")
         password, _ := cmd.Flags().GetString("password")
-        
+        cfg := viper.GetViper()
+
         // Update driver's username if needed
         if username != "" {
-            cfg.UpdateTOML(workdirFlag, "driver.username", username)
+            cfg.Set("driver.username", username)
         }
-        
+
         // Update driver's password if needed
         if password != "" {
-            cfg.UpdateTOML(workdirFlag, "driver.password", password)
+            cfg.Set("driver.password", password)
         }
-        
+
+        // Update TOML configuration file
+        cfg.WriteConfig()
         fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
 	},
 }
@@ -59,13 +60,17 @@ var databaseCmd = &cobra.Command{
 	Short: "update section 'database'",
 	Long: `update section 'database'`,
 	Run: func(cmd *cobra.Command, args []string) {
-        workdirFlag, _ := cmd.Flags().GetString("workdir")
         table, _ := cmd.Flags().GetString("table")
-        
-        // Update database's table if needed
+        cfg := viper.GetViper()
+
+        // Update driver's password if needed
         if table != "" {
-            cfg.UpdateTOML(workdirFlag, "database.table", table)
+            cfg.Set("database.table", table)
         }
+
+        // Update TOML configuration file
+        cfg.WriteConfig()
+        fmt.Fprintln(cmd.OutOrStdout(), "[+] - Configuration updated")
 	},
 }
 
