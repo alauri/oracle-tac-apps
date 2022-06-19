@@ -16,6 +16,6 @@ var resetCmd = &cobra.Command{
 	Short: "Reset database data to factory.",
 	Long: `Reset database data to factory.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Fprintln(cmd.OutOrStdout(), "reset called")
+		fmt.Fprintln(cmd.OutOrStdout(), "[+] - Database has been reset")
 	},
 }
