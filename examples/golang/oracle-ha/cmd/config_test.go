@@ -8,8 +8,8 @@ import (
     "io/ioutil"
     "os"
 
-    "github.com/alauri/oracle-ha-apps/oracle-ha/cfg"
     "github.com/stretchr/testify/assert"
+	"github.com/spf13/viper"
 )
 
 
@@ -24,6 +24,44 @@ func copyConfiguraton(source string, destination string) {
     if err != nil {
         panic(err)
     }
+}
+
+type driver struct {
+    Username string `toml:"username"`
+    Password string `toml:"password"`
+}
+
+type database struct {
+    Table string `toml:"table"`
+}
+
+type config struct {
+    Driver driver `toml:"driver"`
+    Database database `toml:"database"`
+}
+
+func readConfiguration(path string) config {
+    // Read configuration TOML file
+
+    var vp = viper.New()
+    var ctoml config
+
+    vp.AddConfigPath(path)
+    vp.SetConfigName("config")
+    vp.SetConfigType("toml")
+
+    // Read the TOML file
+    err := vp.ReadInConfig()
+    if err != nil {
+        panic(err)
+    }
+
+    // Convert the TOML file into struct
+    err = vp.Unmarshal(&ctoml)
+    if err != nil {
+        panic(err)
+    }
+    return ctoml
 }
 
 func setupSuite(tb testing.TB, st string) func(tb testing.TB, st string) {
@@ -81,7 +119,7 @@ func Test_Package(t *testing.T) {
         rootCmd.SetArgs([]string{"-w", static, "config", "driver", "--username", "fake"})
         rootCmd.Execute()
 
-        infile := cfg.ReadTOML(static)
+        infile := readConfiguration(static)
         assert.Equal(t, "fake", infile.Driver.Username)
     })
 
@@ -93,7 +131,7 @@ func Test_Package(t *testing.T) {
         rootCmd.SetArgs([]string{"-w", static, "config", "driver", "--password", "fake"})
         rootCmd.Execute()
 
-        infile := cfg.ReadTOML(static)
+        infile := readConfiguration(static)
         assert.Equal(t, "fake", infile.Driver.Password)
     })
 
@@ -105,7 +143,7 @@ func Test_Package(t *testing.T) {
         rootCmd.SetArgs([]string{"-w", static, "config", "database", "--table", "fake"})
         rootCmd.Execute()
 
-        infile := cfg.ReadTOML(static)
+        infile := readConfiguration(static)
         assert.Equal(t, "fake", infile.Database.Table)
     })
 }
