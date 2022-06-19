@@ -31,16 +31,20 @@ var deleteCmd = &cobra.Command{
         iters, _ := cmd.Flags().GetInt("iters")
         delay, _ := cmd.Flags().GetFloat64("delay")
         commit_every, _ := cmd.Flags().GetInt("commit-every")
+
+        // Define query parameters
         table := viper.GetViper().GetString("database.table")
         conditions := conds{0}
 
         if loop { iters = 0 }
         step := 1
         for {
+            // Exit condition
             if !loop && step > iters {
                 break
             }
 
+            // Prepare query with updated conditions
             pairs := conds{conditions.id + step}
             query := fmt.Sprintf("DELETE FROM %s WHERE id=%d", table, pairs.id)
 

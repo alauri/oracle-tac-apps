@@ -1,3 +1,8 @@
+/*
+Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
+
+Tests for the package ``delete.go``
+*/
 package cmd
 
 
@@ -33,7 +38,7 @@ func Test_Delete_No_Args(t *testing.T) {
 }
 
 
-func Test_Delete_Iters(t *testing.T) {
+func Test_Delete_With_Args(t *testing.T) {
     // Invoke the command ``delete`` with the options to iterate the same
     // operation multiple times.
 
