@@ -6,28 +6,27 @@ Tests for the package ``reset.go``
 package cmd
 
 import (
-    "testing"
-    "bytes"
-    "runtime"
-    "path"
+	"bytes"
+	"path"
+	"runtime"
+	"testing"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-
 func Test_Reset_No_Args(t *testing.T) {
-    // Invoke the command ``reset`` with no options.
+	// Invoke the command ``reset`` with no options.
 
-    _, filename, _, _ := runtime.Caller(0)
-    static := path.Join(path.Dir(filename), "../static")
+	_, filename, _, _ := runtime.Caller(0)
+	static := path.Join(path.Dir(filename), "../static")
 
-    actual := new(bytes.Buffer)
+	actual := new(bytes.Buffer)
 
-    rootCmd.SetOut(actual)
-    rootCmd.SetErr(actual)
-    rootCmd.SetArgs([]string{"-w", static, "reset"})
-    rootCmd.Execute()
+	rootCmd.SetOut(actual)
+	rootCmd.SetErr(actual)
+	rootCmd.SetArgs([]string{"-w", static, "reset"})
+	rootCmd.Execute()
 
-    expected := "[+] - Database has been reset\n"
-    assert.Equal(t, expected, actual.String())
+	expected := "[+] - Database has been reset\n"
+	assert.Equal(t, expected, actual.String())
 }
