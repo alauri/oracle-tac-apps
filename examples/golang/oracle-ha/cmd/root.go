@@ -6,22 +6,21 @@ package cmd
 
 import (
 	"os"
-    "path"
-    "runtime"
+	"path"
+	"runtime"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-
 var workdir string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "oracle-ha",
-	Short: "Oracle High Availability CLI in Golang",
-	Long: `Oracle High Availability CLI in Golang`,
-    PreRun: func(cmd *cobra.Command, args []string) {},
+	Use:    "oracle-ha",
+	Short:  "Oracle High Availability CLI in Golang",
+	Long:   `Oracle High Availability CLI in Golang`,
+	PreRun: func(cmd *cobra.Command, args []string) {},
 }
 
 func Execute() {
@@ -32,29 +31,29 @@ func Execute() {
 }
 
 func init() {
-    cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(initConfig)
 
-    _, filename, _, _ := runtime.Caller(0)
-    dir := path.Join(path.Dir(filename), "../../..")
-    rootCmd.PersistentFlags().StringVarP(&workdir, "workdir", "w", dir,
-                                         "the absolute path of the configuration folder")
+	_, filename, _, _ := runtime.Caller(0)
+	dir := path.Join(path.Dir(filename), "../../..")
+	rootCmd.PersistentFlags().StringVarP(&workdir, "workdir", "w", dir,
+		"the absolute path of the configuration folder")
 
-    // Register sub-commands
-    rootCmd.AddCommand(configCmd)
-    rootCmd.AddCommand(deleteCmd)
-    rootCmd.AddCommand(insertCmd)
-    rootCmd.AddCommand(resetCmd)
-    rootCmd.AddCommand(updateCmd)
+	// Register sub-commands
+	rootCmd.AddCommand(configCmd)
+	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(insertCmd)
+	rootCmd.AddCommand(resetCmd)
+	rootCmd.AddCommand(updateCmd)
 }
 
 func initConfig() {
-    viper.AddConfigPath(workdir)
-    viper.SetConfigType("toml")
-    viper.SetConfigName("config")
+	viper.AddConfigPath(workdir)
+	viper.SetConfigType("toml")
+	viper.SetConfigName("config")
 
-    // If a config file is found, read it in.
-    err := viper.ReadInConfig()
-    if err != nil {
-    	panic(err)
-    }
+	// If a config file is found, read it in.
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
 }
