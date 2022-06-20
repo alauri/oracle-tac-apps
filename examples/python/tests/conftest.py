@@ -47,13 +47,14 @@ def runner() -> CliRunner:
 
 
 @pytest.fixture(autouse=True)
-def wrap_every_test():
+def wrap_every_test(mocker):
     """Wrap every single test with action that must be occur before and after.
 
     Returns:
         Nothing
     """
     # Setup: fill with any logic you want
+    mocker.patch("cx_Oracle.connect")
 
     yield
 

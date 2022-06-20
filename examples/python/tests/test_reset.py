@@ -13,8 +13,7 @@ def test_no_args(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'update'])
+    result = runner.invoke(cli, ["-w", static, 'reset'])
 
     assert result.exit_code == 0
-
-    assert result.output == "[+] - Database has been reset"
+    assert result.output == "[+] - Database has been reset\n"
