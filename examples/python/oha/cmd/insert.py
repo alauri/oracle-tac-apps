@@ -12,6 +12,8 @@ after how many operations commit the changes.
 import time
 import click
 
+import cx_Oracle
+
 
 @click.command()
 @click.option('--loop/--no-loop',
@@ -51,12 +53,17 @@ def insert(obj,
             query = (f"INSERT INTO {table}({', '.join(conds.keys())}) "
                      f"VALUES({', '.join(values)})")
 
-            # TODO: replace with call to cx_Oracle driver
-            click.echo(f"[{step}/{iters}] - {query}")
+            # Execute query
+            try:
+                obj.cur.execute(query)
+                click.echo(f"[{step}/{iters}] - {query}")
+            except cx_Oracle.IntegrityError as err:
+                click.echo(err)
+                break
 
             # Commit changes
             if step % commit_every == 0:
-                # TODO: insert a database commit operation here
+                obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
             step += 1
@@ -66,5 +73,5 @@ def insert(obj,
 
     # Check the last commit
     if iters % commit_every != 0:
-        # TODO: insert a database commit operation here
+        obj.conn.commit()
         click.echo(f"[{iters}/{iters}] - COMMIT")

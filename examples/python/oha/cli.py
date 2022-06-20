@@ -12,6 +12,8 @@ import click
 
 import toml
 
+import cx_Oracle
+
 from oha.cmd import (
     config,
     delete,
@@ -28,6 +30,7 @@ class OracleHA:
     def __init__(self, wd: str):
         OracleHA.filename = os.path.join(os.path.abspath(wd), "config.toml")
         self.conf = OracleHA.read_toml()
+        self.driver()
 
     @staticmethod
     def read_toml() -> Dict:
@@ -37,6 +40,16 @@ class OracleHA:
             Nothing
         """
         return toml.load(OracleHA.filename)
+
+    def driver(self) -> None:
+        """Initialize the Oracle driver.
+
+        Returns:
+            Nothing
+        """
+        self.conn = cx_Oracle.connect(user=self.conf["driver"]["username"],
+                                      password=self.conf["driver"]["password"])
+        self.cur = self.conn.cursor()
 
 
 @click.group()
