@@ -35,8 +35,12 @@ func init() {
 
 	_, filename, _, _ := runtime.Caller(0)
 	dir := path.Join(path.Dir(filename), "../../..")
+
+	// Persistent flags
 	rootCmd.PersistentFlags().StringVarP(&workdir, "workdir", "w", dir,
 		"the absolute path of the configuration folder")
+	rootCmd.PersistentFlags().IntP("dsn", "d", 1,
+		"the connection string to use")
 
 	// Register sub-commands
 	rootCmd.AddCommand(configCmd)

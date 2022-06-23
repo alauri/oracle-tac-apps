@@ -2,5 +2,13 @@
 username = "test"
 password = "test"
 
+dsn1 = "localhost:0000/fake"
+dsn2 = """Lorem ipsum dolor sit amet, \
+        consectetur adipiscing elit, \
+        sed do eiusmod tempor incididunt ut \
+        labore et dolore magna aliqua.
+"""
+dsn3 = "FAKE"
+
 [database]
 table = "test"
