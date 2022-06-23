@@ -13,6 +13,17 @@ def test_cli(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static])
+    result = runner.invoke(cli.cli, ["-w", static, "-d", 5])
     assert result.exit_code == 2
     assert "Error: Missing command." in result.output
+
+
+def test_cli_error(runner, static) -> None:
+    """Invoke the CLI with a wrong dsn value.
+
+    Returns:
+        Nothing
+    """
+    result = runner.invoke(cli.cli, ["-w", static, "-d", 0])
+    assert result.exit_code == 2
+    assert "Invalid value for '-d'" in result.output
