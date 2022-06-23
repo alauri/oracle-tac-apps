@@ -58,7 +58,7 @@ var deleteCmd = &cobra.Command{
 			}
 
 			step += 1
-			time.Sleep(time.Duration(delay) * time.Millisecond)
+			time.Sleep(time.Duration(delay) * time.Second)
 		}
 
 		// Chech the last commit
