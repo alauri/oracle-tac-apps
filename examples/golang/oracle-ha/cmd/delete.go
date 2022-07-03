@@ -15,6 +15,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/alauri/oracle-ha-apps/oracle-ha/db"
 )
 
 // deleteCmd represents the delete command
@@ -23,6 +25,7 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete records from the table.",
 	Long:  `Delete records from the table.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		dsn, _ := cmd.Flags().GetInt("dsn")
 		loop, _ := cmd.Flags().GetBool("loop")
 		iters, _ := cmd.Flags().GetInt("iters")
 		delay, _ := cmd.Flags().GetFloat64("delay")
@@ -31,6 +34,12 @@ var deleteCmd = &cobra.Command{
 		// Define query parameters
 		table := viper.GetViper().GetString("database.table")
 		conditions := Conds{0}
+
+		// Retrieve a fresh Database connection
+		conn, err := db.GetDatabase(dsn)
+		if err != nil {
+			panic(err)
+		}
 
 		if loop {
 			iters = 0
@@ -46,7 +55,8 @@ var deleteCmd = &cobra.Command{
 			pairs := Conds{conditions.id + step}
 			query := fmt.Sprintf("DELETE FROM %s WHERE id=%d", table, pairs.id)
 
-			// TODO: replace with call to cx_Oracle driver
+			// Perform the query
+			db.DoQuery(conn, query)
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 

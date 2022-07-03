@@ -15,6 +15,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/alauri/oracle-ha-apps/oracle-ha/db"
 )
 
 // updateCmd represents the update command
@@ -23,6 +25,7 @@ var updateCmd = &cobra.Command{
 	Short: "Update records into the table.",
 	Long:  `Update records into the table.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		dsn, _ := cmd.Flags().GetInt("dsn")
 		loop, _ := cmd.Flags().GetBool("loop")
 		iters, _ := cmd.Flags().GetInt("iters")
 		delay, _ := cmd.Flags().GetFloat64("delay")
@@ -32,6 +35,12 @@ var updateCmd = &cobra.Command{
 		table := viper.GetViper().GetString("database.table")
 		conditions := Conds{1}
 		arguments := Arguments{0}
+
+		// Retrieve a fresh Database connection
+		conn, err := db.GetDatabase(dsn)
+		if err != nil {
+			panic(err)
+		}
 
 		if loop {
 			iters = 0
@@ -49,7 +58,8 @@ var updateCmd = &cobra.Command{
 			query := fmt.Sprintf("UPDATE %s SET arg=%d WHERE id=%d",
 				table, sets.arg, wheres.id)
 
-			// TODO: replace with call to cx_Oracle driver
+			// Perform the query
+			db.DoQuery(conn, query)
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 
