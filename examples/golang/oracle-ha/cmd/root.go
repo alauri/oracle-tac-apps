@@ -11,6 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	_ "github.com/alauri/oracle-ha-apps/oracle-ha/db"
 )
 
 var workdir string
