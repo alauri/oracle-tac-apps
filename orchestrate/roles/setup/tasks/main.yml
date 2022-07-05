@@ -1,0 +1,19 @@
+- name: Connection test
+  ping:
+  tags: ping
+
+- name: System update
+  become: true
+  become_user: root
+  become_method: su
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Install Vim
+  become: yes
+  become_user: root
+  become_method: su
+  dnf:
+    name: 'vim'
+    state: present

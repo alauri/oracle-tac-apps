@@ -1,0 +1,7 @@
+- name: Install golang
+  become: yes
+  become_user: root
+  become_method: su
+  dnf:
+    name: 'golang'
+    state: present

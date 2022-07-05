@@ -1,0 +1,11 @@
+---
+
+# Configure all supported programming languages
+- hosts: remotes
+  roles:
+    - role: python
+      tags: py
+    - role: java
+      tags: java
+    - role: golang
+      tags: go
