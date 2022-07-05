@@ -1,6 +1,6 @@
 # Automate service and app configuration
 
-Under this folder you can find Ansible *roles* that can help you configuring
+Under this folder you can find Ansible *roles* that can help you in configuring
 both services and applications rather than doing it on your own.
 
 You just have to specify the remote serves for both database services and

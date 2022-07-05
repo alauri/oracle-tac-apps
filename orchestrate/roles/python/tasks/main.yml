@@ -1,0 +1,7 @@
+- name: Install Python39
+  become: true
+  become_user: root
+  become_method: su
+  dnf:
+    name: '@python39'   # Using the @ enable appstream module installation
+    state: present

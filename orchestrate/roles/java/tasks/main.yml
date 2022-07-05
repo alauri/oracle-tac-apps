@@ -1,0 +1,6 @@
+- name: Install java
+  become: yes
+  become_user: root
+  become_method: su
+  dnf:
+    # TODO: install Java binary
