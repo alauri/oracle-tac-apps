@@ -3,5 +3,4 @@
   become_user: root
   become_method: su
   dnf:
-    name: 'golang'
-    state: present
+    # TODO: install Golang binary
