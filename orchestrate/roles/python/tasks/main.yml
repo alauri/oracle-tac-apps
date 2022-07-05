@@ -7,8 +7,14 @@
     name: '@python39'   # Using the @ enable appstream module installation
     state: present
 
-- name: Install poetry
-  shell: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+- name: Download Poetry
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
+    dest: /tmp/get-poetry.py
+    mode: '0640'
+
+- name: Install Poetry
+  command: python3 /tmp/get-poetry.py
 
 - name: Add Poetry to the PATH env var
   lineinfile:
@@ -37,3 +43,9 @@
   shell:
     chdir: ~/workspace/applications/py/Oracle-HA/
     cmd: . ~/.bash_profile && poetry install
+
+- name: Delete Poetry installation script
+  ansible.builtin.file:
+    path: /tmp/get-poetry.py
+    state: absent
+    remote_src: true
