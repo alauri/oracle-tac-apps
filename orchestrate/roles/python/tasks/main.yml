@@ -11,15 +11,10 @@
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
     dest: /tmp/get-poetry.py
-    mode: '0640'
+    mode: '0664'
 
 - name: Install Poetry
-  command: python3 /tmp/get-poetry.py
-
-- name: Add Poetry to the PATH env var
-  lineinfile:
-    path: ~/.bash_profile
-    line: "export PATH=$HOME/.poetry/bin:$PATH"
+  command: python3 /tmp/get-poetry.py -y
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
