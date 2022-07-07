@@ -1,7 +1,0 @@
----
-
-# Configure environments
-- hosts: remotes
-  roles:
-    - role: setup
-      tags: setup

@@ -1,5 +1,5 @@
 ---
 
 # Orchestrate all roles and all tasks
-- import_playbook: system.yml
+- import_playbook: driver.yml
 - import_playbook: applications.yml

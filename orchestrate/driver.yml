@@ -1,0 +1,9 @@
+---
+
+# Configure environments
+- hosts: remotes
+  roles:
+    - role: system
+      tags: sys
+    - role: client
+      tags: clt
