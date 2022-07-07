@@ -6,14 +6,15 @@
   become: true
   become_user: root
   become_method: su
-  dnf:
+  ansible.builtin.dnf:
     name: "*"
     state: latest
 
 - name: Install Vim
-  become: yes
+  become: true
   become_user: root
   become_method: su
-  dnf:
-    name: 'vim'
+  ansible.builtin.dnf:
+    name:
+      - vim
     state: present
