@@ -1,0 +1,31 @@
+- name: System update
+  become: true
+  become_user: root
+  become_method: su
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Install the Development Tools, Vim and Git
+  become: true
+  become_user: root
+  become_method: su
+  ansible.builtin.dnf:
+    name:
+      - "@Development tools"
+      - openssl-devel
+      - vim
+      - git
+    state: present
+
+# https://yum.oracle.com/oracle-instant-client.html
+- name: Install Oracle Instant Client
+  become: true
+  become_user: root
+  become_method: su
+  ansible.builtin.dnf:
+    name:
+      - oracle-instantclient-release-el8
+      - oracle-instantclient-basic
+    state: latest
+  ignore_errors: yes

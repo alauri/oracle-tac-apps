@@ -3,7 +3,7 @@
 # Configure all supported programming languages
 - hosts: remotes
   roles:
-    - role: languages
+    - role: app
     - role: python
       tags: py
     - role: java

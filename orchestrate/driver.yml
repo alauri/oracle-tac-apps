@@ -1,9 +1,6 @@
 ---
 
-# Configure environments
-- hosts: remotes
+- hosts: os_OracleLinux_8.6
   roles:
-    - role: system
-      tags: sys
-    - role: client
-      tags: clt
+    - role: ol8.6
+      tags: ol8.6

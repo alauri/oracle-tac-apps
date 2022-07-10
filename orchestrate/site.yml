@@ -1,5 +1,12 @@
 ---
 
+- name: Parse all the remotes to gather information from them
+  hosts: remotes
+  tasks:
+    - name: Classify hosts depending on their OS distribution
+      group_by:
+        key: os_{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}
+
 # Orchestrate all roles and all tasks
 - import_playbook: driver.yml
 - import_playbook: applications.yml
