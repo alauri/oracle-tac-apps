@@ -1,11 +1,26 @@
-- name: Install Python39
-  become: true
-  become_user: root
-  become_method: su
-  dnf:
-    # Py39 is the last available version at the time of writing this role
-    name: '@python39'   # Using the @ enable appstream module installation
-    state: present
+- name: Remove previously pyenv installation
+  ansible.builtin.file:
+    path: ~/.pyenv
+    state: absent
+
+- name: Install pyenv
+  ansible.builtin.shell:
+    cmd: curl https://pyenv.run | bash
+
+- name: Update .bashrc with pyenv binary
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: ""
+    marker_begin: ""
+    marker_end: ""
+    block: |
+      export PATH="~/.pyenv/bin:$PATH"
+      eval "$(pyenv init -)"
+      eval "$(pyenv virtualenv-init -)"
+
+- name: Install Python3.10.5
+  ansible.builtin.shell:
+    cmd:  ~/.pyenv/libexec/pyenv install 3.10.5 && ~/.pyenv/libexec/pyenv local 3.10.5
 
 - name: Download Poetry
   ansible.builtin.get_url:
@@ -35,7 +50,7 @@
     mode: '0644'
 
 - name: Enable poetry and install dependencies
-  shell:
+  ansible.builtin.shell:
     chdir: ~/workspace/applications/py/Oracle-HA/
     cmd: . ~/.bash_profile && poetry install
 
