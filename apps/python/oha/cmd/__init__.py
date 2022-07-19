@@ -2,7 +2,7 @@
 
 
 from oha.cmd.config import config
-from oha.cmd.insert import insert
-from oha.cmd.update import update
-from oha.cmd.delete import delete
+from oha.cmd.injest import injest
+from oha.cmd.cleanup import cleanup
+from oha.cmd.remove import remove
 from oha.cmd.reset import reset

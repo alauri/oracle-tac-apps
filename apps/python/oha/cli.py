@@ -16,9 +16,9 @@ import cx_Oracle
 
 from oha.cmd import (
     config,
-    delete,
-    insert,
-    update,
+    remove,
+    injest,
+    cleanup,
     reset
 )
 
@@ -79,7 +79,7 @@ def cli(ctx, workdir: str, dsn: int) -> None:
 
 # Register commands
 cli.add_command(config)
-cli.add_command(delete)
-cli.add_command(insert)
-cli.add_command(update)
+cli.add_command(remove)
+cli.add_command(injest)
+cli.add_command(cleanup)
 cli.add_command(reset)

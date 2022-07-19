@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""Command ``insert`` is used store new records within the db.
+"""Command ``remove`` is used to delete one or more records from the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -33,12 +33,12 @@ import cx_Oracle
               default=1,
               help='after how many operations perform a commit')
 @click.pass_context
-def insert(ctx,
+def remove(ctx,
            loop: bool,
            iters: int,
            delay: float,
            commit_every: int) -> None:
-    """Insert new records within the table"""
+    """Delete records from the table"""
 
     # Define query parameters
     table = ctx.obj.conf["database"]["table"]
@@ -49,9 +49,8 @@ def insert(ctx,
     try:
         while loop or step <= iters:
             # Prepare query with updated conditions
-            values = [str(val + step) for val in conds.values()]
-            query = (f"INSERT INTO {table}({', '.join(conds.keys())}, DEPARTMENT_NAME) "
-                     f"VALUES({', '.join(values)}, 'pippo')")
+            pairs = [f"{cond}={val + step}" for cond, val in conds.items()]
+            query = f"DELETE FROM {table} WHERE {', '.join(pairs)}"
 
             # Execute query
             ctx.obj.cur.execute(query)
