@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 
 
-"""Tests for the module ``update.py``"""
+"""Tests for the module ``cleanup.py``"""
 
 
 from oha.cli import cli
 
 
 def test_no_args(runner, static) -> None:
-    """Invoke the command ``update`` with no options.
+    """Invoke the command ``cleanup`` with no options.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'update'])
+    result = runner.invoke(cli, ["-w", static, 'cleanup'])
 
     assert result.exit_code == 0
 
@@ -23,12 +23,12 @@ def test_no_args(runner, static) -> None:
 
 
 def test_args(runner, static) -> None:
-    """Invoke the command ``update`` with the options ``iters``.
+    """Invoke the command ``cleanup`` with the options ``iters``.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'update',
+    result = runner.invoke(cli, ["-w", static, 'cleanup',
                                  "--iters", 5,
                                  "--delay", 0.05,
                                  "--commit-every", 2

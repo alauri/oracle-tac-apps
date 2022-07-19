@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 
 
-"""Tests for the module ``delete.py``"""
+"""Tests for the module ``remove.py``"""
 
 
 from oha.cli import cli
 
 
 def test_no_args(runner, static) -> None:
-    """Invoke the command ``delete`` with no options.
+    """Invoke the command ``remove`` with no options.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'delete'])
+    result = runner.invoke(cli, ["-w", static, 'remove'])
 
     assert result.exit_code == 0
 
@@ -23,12 +23,12 @@ def test_no_args(runner, static) -> None:
 
 
 def test_iters(runner, static) -> None:
-    """Invoke the command `delete` with the options ``iters``.
+    """Invoke the command `remove` with the options ``iters``.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'delete',
+    result = runner.invoke(cli, ["-w", static, 'remove',
                                  "--iters", 5,
                                  "--delay", 0.05,
                                  "--commit-every", 2

@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 
 
-"""Tests for the module ``insert.py``"""
+"""Tests for the module ``injest.py``"""
 
 
 from oha.cli import cli
 
 
 def test_no_args(runner, static) -> None:
-    """Invoke the command ``insert`` with no options.
+    """Invoke the command ``injest`` with no options.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'insert'])
+    result = runner.invoke(cli, ["-w", static, 'injest'])
 
     assert result.exit_code == 0
 
@@ -28,7 +28,7 @@ def test_args(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'insert',
+    result = runner.invoke(cli, ["-w", static, 'injest',
                                  "--iters", 5,
                                  "--delay", 0.05,
                                  "--commit-every", 2

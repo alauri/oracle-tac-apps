@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""Command ``update`` to change already existing records within the db.
+"""Command ``injest`` is used store new records within the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -33,28 +33,25 @@ import cx_Oracle
               default=1,
               help='after how many operations perform a commit')
 @click.pass_context
-def update(ctx,
+def injest(ctx,
            loop: bool,
            iters: int,
            delay: float,
            commit_every: int) -> None:
-    """Update records within the database"""
+    """Insert new records within the table"""
 
     # Define query parameters
     table = ctx.obj.conf["database"]["table"]
-    args = {"DEPARTMENT_NAME": 0}
-    conds = {"DEPARTMENT_ID": 1}
+    conds = {"DEPARTMENT_ID": 0}
 
     iters = 0 if loop else iters
     step = 1
     try:
         while loop or step <= iters:
             # Prepare query with updated conditions
-            sets = [f"{arg}='pippo{val + step}'" for arg, val in args.items()]
-            wheres = [f"{arg}={val + step}" for arg, val in conds.items()]
-            query = (f"UPDATE {table} "
-                     f"SET {', '.join(sets)} "
-                     f"WHERE {', '.join(wheres)}")
+            values = [str(val + step) for val in conds.values()]
+            query = (f"INSERT INTO {table}({', '.join(conds.keys())}, DEPARTMENT_NAME) "
+                     f"VALUES({', '.join(values)}, 'pippo')")
 
             # Execute query
             ctx.obj.cur.execute(query)

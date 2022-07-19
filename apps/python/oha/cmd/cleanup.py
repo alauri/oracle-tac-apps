@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""Command ``delete`` is used to delete one or more records from the db.
+"""Command ``cleanup`` to change already existing records within the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -33,24 +33,28 @@ import cx_Oracle
               default=1,
               help='after how many operations perform a commit')
 @click.pass_context
-def delete(ctx,
+def cleanup(ctx,
            loop: bool,
            iters: int,
            delay: float,
            commit_every: int) -> None:
-    """Delete records from the table"""
+    """Update records within the database"""
 
     # Define query parameters
     table = ctx.obj.conf["database"]["table"]
-    conds = {"DEPARTMENT_ID": 0}
+    args = {"DEPARTMENT_NAME": 0}
+    conds = {"DEPARTMENT_ID": 1}
 
     iters = 0 if loop else iters
     step = 1
     try:
         while loop or step <= iters:
-            # Prepare query with updated conditions
-            pairs = [f"{cond}={val + step}" for cond, val in conds.items()]
-            query = f"DELETE FROM {table} WHERE {', '.join(pairs)}"
+            # Prepare query with cleanupd conditions
+            sets = [f"{arg}='pippo{val + step}'" for arg, val in args.items()]
+            wheres = [f"{arg}={val + step}" for arg, val in conds.items()]
+            query = (f"UPDATE {table} "
+                     f"SET {', '.join(sets)} "
+                     f"WHERE {', '.join(wheres)}")
 
             # Execute query
             ctx.obj.cur.execute(query)
