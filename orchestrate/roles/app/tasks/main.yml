@@ -2,7 +2,7 @@
   ansible.builtin.copy:
     # TODO: find a better way to access the Python application example, maybe
     # with an ansible variable
-    src: ../../../../examples/config.toml
+    src: ../../../../apps/config.toml
     dest: ~/workspace/applications/
     owner: oracle
     group: oracle

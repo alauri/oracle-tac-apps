@@ -1,4 +1,4 @@
-# Application examples
+# The applications
 
 We provide application examples in the following programming languages:
 
