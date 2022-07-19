@@ -32,8 +32,8 @@ import cx_Oracle
               type=int,
               default=1,
               help='after how many operations perform a commit')
-@click.pass_obj
-def update(obj,
+@click.pass_context
+def update(ctx,
            loop: bool,
            iters: int,
            delay: float,
@@ -41,40 +41,39 @@ def update(obj,
     """Update records within the database"""
 
     # Define query parameters
-    table = obj.conf["database"]["table"]
-    args = {"arg": 0}
-    conds = {"id": 1}
+    table = ctx.obj.conf["database"]["table"]
+    args = {"DEPARTMENT_NAME": 0}
+    conds = {"DEPARTMENT_ID": 1}
 
     iters = 0 if loop else iters
     step = 1
     try:
         while loop or step <= iters:
             # Prepare query with updated conditions
-            sets = [f"{arg}={val + step}" for arg, val in args.items()]
+            sets = [f"{arg}='pippo{val + step}'" for arg, val in args.items()]
             wheres = [f"{arg}={val + step}" for arg, val in conds.items()]
             query = (f"UPDATE {table} "
                      f"SET {', '.join(sets)} "
                      f"WHERE {', '.join(wheres)}")
 
             # Execute query
-            try:
-                obj.cur.execute(query)
-                click.echo(f"[{step}/{iters}] - {query}")
-            except cx_Oracle.IntegrityError as err:
-                click.echo(err)
-                break
+            ctx.obj.cur.execute(query)
+            click.echo(f"[{step}/{iters}] - {query}")
 
             # Commit changes
             if step % commit_every == 0:
-                obj.conn.commit()
+                ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
             step += 1
             time.sleep(delay)
+
+        # Check the last commit
+        if iters % commit_every != 0:
+            ctx.obj.conn.commit()
+            click.echo(f"[{iters}/{iters}] - COMMIT")
+    except cx_Oracle.DatabaseError as err:
+        click.echo(err)
+        ctx.exit(1)
     except KeyboardInterrupt as _:
         click.echo("Error - Interrupted by the user")
-
-    # Check the last commit
-    if iters % commit_every != 0:
-        obj.conn.commit()
-        click.echo(f"[{iters}/{iters}] - COMMIT")

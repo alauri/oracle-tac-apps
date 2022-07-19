@@ -18,7 +18,7 @@ def test_no_args(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/1] - DELETE FROM test WHERE id=1',
+    assert output == ['[1/1] - DELETE FROM test WHERE DEPARTMENT_ID=1',
                       '[1/1] - COMMIT']
 
 
@@ -37,11 +37,11 @@ def test_iters(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/5] - DELETE FROM test WHERE id=1',
-                      '[2/5] - DELETE FROM test WHERE id=2',
+    assert output == ['[1/5] - DELETE FROM test WHERE DEPARTMENT_ID=1',
+                      '[2/5] - DELETE FROM test WHERE DEPARTMENT_ID=2',
                       '[2/5] - COMMIT',
-                      '[3/5] - DELETE FROM test WHERE id=3',
-                      '[4/5] - DELETE FROM test WHERE id=4',
+                      '[3/5] - DELETE FROM test WHERE DEPARTMENT_ID=3',
+                      '[4/5] - DELETE FROM test WHERE DEPARTMENT_ID=4',
                       '[4/5] - COMMIT',
-                      '[5/5] - DELETE FROM test WHERE id=5',
+                      '[5/5] - DELETE FROM test WHERE DEPARTMENT_ID=5',
                       '[5/5] - COMMIT']

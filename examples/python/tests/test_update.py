@@ -18,7 +18,7 @@ def test_no_args(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/1] - UPDATE test SET arg=1 WHERE id=2',
+    assert output == ['[1/1] - UPDATE test SET DEPARTMENT_NAME=\'pippo1\' WHERE DEPARTMENT_ID=2',
                       '[1/1] - COMMIT']
 
 
@@ -37,12 +37,13 @@ def test_args(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/5] - UPDATE test SET arg=1 WHERE id=2',
-                      '[2/5] - UPDATE test SET arg=2 WHERE id=3',
-                      '[2/5] - COMMIT',                        
-                      '[3/5] - UPDATE test SET arg=3 WHERE id=4',
-                      '[4/5] - UPDATE test SET arg=4 WHERE id=5',
-                      '[4/5] - COMMIT',                        
-                      '[5/5] - UPDATE test SET arg=5 WHERE id=6',
-                      '[5/5] - COMMIT']
-
+    assert output == [
+        "[1/5] - UPDATE test SET DEPARTMENT_NAME=\'pippo1\' WHERE DEPARTMENT_ID=2",
+        "[2/5] - UPDATE test SET DEPARTMENT_NAME=\'pippo2\' WHERE DEPARTMENT_ID=3",
+        '[2/5] - COMMIT',
+        "[3/5] - UPDATE test SET DEPARTMENT_NAME=\'pippo3\' WHERE DEPARTMENT_ID=4",
+        "[4/5] - UPDATE test SET DEPARTMENT_NAME=\'pippo4\' WHERE DEPARTMENT_ID=5",
+        '[4/5] - COMMIT',
+        "[5/5] - UPDATE test SET DEPARTMENT_NAME=\'pippo5\' WHERE DEPARTMENT_ID=6",
+        '[5/5] - COMMIT'
+    ]
