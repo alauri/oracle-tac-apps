@@ -43,7 +43,7 @@
   ansible.builtin.copy:
     # TODO: find a better way to access the Python application example, maybe
     # with an ansible variable
-    src: ../../../../examples/python/
+    src: ../../../../apps/python/
     dest: ~/workspace/applications/py/Oracle-HA/
     owner: oracle
     group: oracle
