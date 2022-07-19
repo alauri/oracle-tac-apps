@@ -70,7 +70,11 @@ def cli(ctx, workdir: str, dsn: int) -> None:
     """Oracle High Availability CLI in Python"""
 
     # Initialize Click context with TOML configuration file
-    ctx.obj = OracleHA(workdir, dsn)
+    try:
+        ctx.obj = OracleHA(workdir, dsn)
+    except cx_Oracle.DatabaseError as err:
+        click.echo(err)
+        ctx.exit(1)
 
 
 # Register commands

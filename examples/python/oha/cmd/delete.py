@@ -32,8 +32,8 @@ import cx_Oracle
               type=int,
               default=1,
               help='after how many operations perform a commit')
-@click.pass_obj
-def delete(obj,
+@click.pass_context
+def delete(ctx,
            loop: bool,
            iters: int,
            delay: float,
@@ -41,8 +41,8 @@ def delete(obj,
     """Delete records from the table"""
 
     # Define query parameters
-    table = obj.conf["database"]["table"]
-    conds = {"id": 0}
+    table = ctx.obj.conf["database"]["table"]
+    conds = {"DEPARTMENT_ID": 0}
 
     iters = 0 if loop else iters
     step = 1
@@ -53,24 +53,23 @@ def delete(obj,
             query = f"DELETE FROM {table} WHERE {', '.join(pairs)}"
 
             # Execute query
-            try:
-                obj.cur.execute(query)
-                click.echo(f"[{step}/{iters}] - {query}")
-            except cx_Oracle.IntegrityError as err:
-                click.echo(err)
-                break
+            ctx.obj.cur.execute(query)
+            click.echo(f"[{step}/{iters}] - {query}")
 
             # Commit changes
             if step % commit_every == 0:
-                obj.conn.commit()
+                ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
             step += 1
             time.sleep(delay)
+
+        # Check the last commit
+        if iters % commit_every != 0:
+            ctx.obj.conn.commit()
+            click.echo(f"[{iters}/{iters}] - COMMIT")
+    except cx_Oracle.DatabaseError as err:
+        click.echo(err)
+        ctx.exit(1)
     except KeyboardInterrupt as _:
         click.echo("Error - Interrupted by the user")
-
-    # Check the last commit
-    if iters % commit_every != 0:
-        obj.conn.commit()
-        click.echo(f"[{iters}/{iters}] - COMMIT")

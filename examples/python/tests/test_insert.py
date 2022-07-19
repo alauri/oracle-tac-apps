@@ -18,7 +18,7 @@ def test_no_args(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/1] - INSERT INTO test(id) VALUES(1)',
+    assert output == ['[1/1] - INSERT INTO test(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(1, \'pippo\')',
                       '[1/1] - COMMIT']
 
 
@@ -37,11 +37,11 @@ def test_args(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/5] - INSERT INTO test(id) VALUES(1)',
-                      '[2/5] - INSERT INTO test(id) VALUES(2)',
+    assert output == ['[1/5] - INSERT INTO test(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(1, \'pippo\')',
+                      '[2/5] - INSERT INTO test(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(2, \'pippo\')',
                       '[2/5] - COMMIT',
-                      '[3/5] - INSERT INTO test(id) VALUES(3)',
-                      '[4/5] - INSERT INTO test(id) VALUES(4)',
+                      '[3/5] - INSERT INTO test(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(3, \'pippo\')',
+                      '[4/5] - INSERT INTO test(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(4, \'pippo\')',
                       '[4/5] - COMMIT',
-                      '[5/5] - INSERT INTO test(id) VALUES(5)',
+                      '[5/5] - INSERT INTO test(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(5, \'pippo\')',
                       '[5/5] - COMMIT']
