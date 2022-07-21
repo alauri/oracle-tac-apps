@@ -1,7 +1,9 @@
-[driver]
+[database]
+# User credentials
 username = "test"
 password = "test"
 
+# Connection strings
 dsn1 = "localhost:0000/fake"
 dsn2 = """Lorem ipsum dolor sit amet, \
         consectetur adipiscing elit, \
@@ -10,5 +12,9 @@ dsn2 = """Lorem ipsum dolor sit amet, \
 """
 dsn3 = "FAKE"
 
-[database]
-table = "test"
+# Database schema
+tableraw = "raw_table"
+tablejson = "json_table"
+
+[injest]
+dumpfile = "../raw.csv"
