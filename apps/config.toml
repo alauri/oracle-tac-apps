@@ -1,7 +1,9 @@
-[driver]
-username = "hr"
-password = "hr"
+[database]
+# User credentials
+username = "sbuemi"
+password = "sbuemi"
 
+# Connection strings
 dsn1 = "localhost:1521/PDB"
 dsn2 = "localhost:1521/mygoodappsvc"
 dsn3 = """(DESCRIPTION = \
@@ -28,5 +30,9 @@ dsn4 = """(DESCRIPTION = \
 """
 dsn5 = "HR"
 
-[database]
-table = "departments"
+# Database schema
+tableraw = "raw_telemetry"
+tablejson = "json_telemetry"
+
+[injest]
+dumpfile = "../raw.csv"

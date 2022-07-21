@@ -16,10 +16,6 @@ import cx_Oracle
 
 
 @click.command()
-@click.option('--loop/--no-loop',
-              type=bool,
-              default=False,
-              help="repeat the same operation forever")
 @click.option('--iters',
               type=int,
               default=1,
@@ -34,24 +30,22 @@ import cx_Oracle
               help='after how many operations perform a commit')
 @click.pass_context
 def injest(ctx,
-           loop: bool,
            iters: int,
            delay: float,
            commit_every: int) -> None:
     """Insert new records within the table"""
 
     # Define query parameters
-    table = ctx.obj.conf["database"]["table"]
-    conds = {"DEPARTMENT_ID": 0}
+    table = ctx.obj.conf["database"]["tableraw"]
+    data = open(ctx.obj.conf["injest"]["dumpfile"]).readlines()
 
-    iters = 0 if loop else iters
-    step = 1
     try:
-        while loop or step <= iters:
-            # Prepare query with updated conditions
-            values = [str(val + step) for val in conds.values()]
-            query = (f"INSERT INTO {table}({', '.join(conds.keys())}, DEPARTMENT_NAME) "
-                     f"VALUES({', '.join(values)}, 'pippo')")
+        for step, line in enumerate(data[:iters]):
+            step += 1
+
+            # Prepare the query
+            query = f"INSERT INTO {table}(timestamp,sensorid,data) " \
+                    f"VALUES({line.strip()})"
 
             # Execute query
             ctx.obj.cur.execute(query)
@@ -62,7 +56,7 @@ def injest(ctx,
                 ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
-            step += 1
+            # Wait before the next iteration
             time.sleep(delay)
 
         # Check the last commit
@@ -74,3 +68,4 @@ def injest(ctx,
         ctx.exit(1)
     except KeyboardInterrupt as _:
         click.echo("Error - Interrupted by the user")
+        ctx.exit(1)

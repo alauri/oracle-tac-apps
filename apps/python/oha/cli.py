@@ -30,7 +30,7 @@ class OracleHA:
     def __init__(self, wd: str, d: int):
         OracleHA.filename = os.path.join(os.path.abspath(wd), "config.toml")
         self.conf = OracleHA.read_toml()
-        self.driver(d)
+        self.database(d)
 
     @staticmethod
     def read_toml() -> Dict:
@@ -41,8 +41,8 @@ class OracleHA:
         """
         return toml.load(OracleHA.filename)
 
-    def driver(self, connstr: int) -> None:
-        """Initialize the Oracle driver.
+    def database(self, connstr: int) -> None:
+        """Initialize the Oracle database.
 
         Args:
             connstr: the index of the connection string to use.
@@ -50,9 +50,10 @@ class OracleHA:
         Returns:
             Nothing
         """
-        self.conn = cx_Oracle.connect(user=self.conf["driver"]["username"],
-                                      password=self.conf["driver"]["password"],
-                                      dsn=self.conf["driver"][f"dsn{connstr}"])
+        self.conn = cx_Oracle.connect(
+            user=self.conf["database"]["username"],
+            password=self.conf["database"]["password"],
+            dsn=self.conf["database"][f"dsn{connstr}"])
         self.cur = self.conn.cursor()
 
 
