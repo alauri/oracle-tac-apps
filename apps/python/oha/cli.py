@@ -6,6 +6,7 @@
 
 from typing import Dict
 
+import pprint
 import os
 
 import click
@@ -25,21 +26,10 @@ from oha.cmd import (
 
 class OracleHA:
 
-    filename = ""
-
-    def __init__(self, wd: str, d: int):
-        OracleHA.filename = os.path.join(os.path.abspath(wd), "config.toml")
-        self.conf = OracleHA.read_toml()
-        self.database(d)
-
-    @staticmethod
-    def read_toml() -> Dict:
-        """Read TOML configuration file
-
-        Returns:
-            Nothing
-        """
-        return toml.load(OracleHA.filename)
+    def __init__(self, tomlfile: Dict, workdir: str, dsn: int):
+        self.workdir = workdir
+        self.conf = tomlfile
+        self.database(dsn)
 
     def database(self, connstr: int) -> None:
         """Initialize the Oracle database.
@@ -57,22 +47,37 @@ class OracleHA:
         self.cur = self.conn.cursor()
 
 
-@click.group()
+@click.group(invoke_without_command=True)
+@click.option('--info/--no-info',
+              type=bool,
+              default=False,
+              help="Information about the current configuration")
 @click.option("-w", "--workdir",
               type=str,
               default=os.path.join(os.path.dirname(__file__), "../.."),
-              help="the absolute path of the configuration folder")
+              help="The absolute path of the working folder")
 @click.option("-d", "--dsn",
               type=click.IntRange(min=1, max=5),
               default=1,
-              help="the connection string to use")
+              help="The connection string to use")
 @click.pass_context
-def cli(ctx, workdir: str, dsn: int) -> None:
+def cli(ctx, info: bool, workdir: str, dsn: int) -> None:
     """Oracle High Availability CLI in Python"""
+
+    # Read the configuration file
+    tomlfile = toml.load(os.path.join(os.path.abspath(workdir), "config.toml"))
+
+    if info:
+        pprint.pprint(tomlfile, indent=4)
+        ctx.exit(0)
+
+    if ctx.invoked_subcommand is None:
+        click.echo(cli.get_help(ctx))
+        ctx.exit(0)
 
     # Initialize Click context with TOML configuration file
     try:
-        ctx.obj = OracleHA(workdir, dsn)
+        ctx.obj = OracleHA(tomlfile, workdir, dsn)
     except cx_Oracle.DatabaseError as err:
         click.echo(err)
         ctx.exit(1)
