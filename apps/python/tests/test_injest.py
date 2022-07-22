@@ -21,7 +21,7 @@ def test_no_args(runner, static) -> None:
     output = [l for l in result.output.split("\n") if l]
     assert output == [
         "[1/1] - INSERT INTO raw_table(timestamp,sensorid,data) " \
-            "VALUES(1658351188,3,Right=False|Left=True)",
+            "VALUES(1662674400,3,Right=False|Left=True)",
         "[1/1] - COMMIT"]
 
 
@@ -42,7 +42,7 @@ def test_args(runner, static) -> None:
     output = [l for l in result.output.split("\n") if l]
     assert output == [
         "[1/5] - INSERT INTO raw_table(timestamp,sensorid,data) " \
-            "VALUES(1658351188,3,Right=False|Left=True)",
+            "VALUES(1662674400,3,Right=False|Left=True)",
         "[2/5] - INSERT INTO raw_table(timestamp,sensorid,data) " \
             "VALUES(1658351188,2,Right=False|Left=True)",
         "[3/5] - INSERT INTO raw_table(timestamp,sensorid,data) " \
@@ -50,5 +50,5 @@ def test_args(runner, static) -> None:
         "[4/5] - INSERT INTO raw_table(timestamp,sensorid,data) " \
             "VALUES(1658351188,1,Right=False|Left=True)",
         "[5/5] - INSERT INTO raw_table(timestamp,sensorid,data) " \
-            "VALUES(1658351188,1,Right=False|Left=True)",
+            "VALUES(1659996000,1,Right=False|Left=True)",
         "[5/5] - COMMIT"]
