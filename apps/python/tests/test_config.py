@@ -6,6 +6,7 @@
 
 import shutil
 import os
+import toml
 
 from oha.cli import cli, OracleHA
 
@@ -61,7 +62,7 @@ def test_username(runner, static) -> None:
     assert result.exit_code == 0
     assert "Configuration updated" in result.output
 
-    _toml = OracleHA.read_toml()
+    _toml = toml.load(os.path.join(static, "config.toml"))
     assert _toml["database"]["username"] == "fake"
 
 
@@ -78,7 +79,7 @@ def test_password(runner, static) -> None:
     assert result.exit_code == 0
     assert "Configuration updated" in result.output
 
-    _toml = OracleHA.read_toml()
+    _toml = toml.load(os.path.join(static, "config.toml"))
     assert _toml["database"]["password"] == "fake"
 
 

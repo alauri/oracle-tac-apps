@@ -6,16 +6,19 @@
 
 from oha import cli
 
+import json
 
-def test_cli(runner, static) -> None:
-    """Invoke the CLI with a different working folder.
+
+def test_cli_info(runner, static) -> None:
+    """Invoke the CLI by asking information about the configuration.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static, "-d", 5])
-    assert result.exit_code == 2
-    assert "Error: Missing command." in result.output
+    result = runner.invoke(cli.cli, ["-w", static, "--info"])
+    assert result.exit_code == 0
+    assert result.output.startswith("{")
+    assert result.output.endswith("{")
 
 
 def test_cli_error(runner, static) -> None:

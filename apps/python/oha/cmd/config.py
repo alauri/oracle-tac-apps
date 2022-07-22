@@ -11,6 +11,7 @@ for each value of the section.
 
 import click
 import toml
+import os
 
 
 @click.group(invoke_without_command=True)
@@ -47,7 +48,7 @@ def database(obj, **kwargs) -> None:
     # Collect only those values different from None and update the TOML file
     updates = {(arg, val) for arg, val in kwargs.items() if val is not None}
     obj.conf["database"].update(updates)
-    toml.dump(obj.conf, open(obj.filename, "w"))
+    toml.dump(obj.conf, open(os.path.join(obj.workdir, "config.toml"), "w"))
 
     click.echo("[+] - Configuration updated")
 
