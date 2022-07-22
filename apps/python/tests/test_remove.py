@@ -13,13 +13,20 @@ def test_no_args(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli, ["-w", static, 'remove'])
+    result = runner.invoke(cli, ["-w", static,
+                                 "remove",
+                                 "--delay", 0.05,
+                                 "--older", 10])
 
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/1] - DELETE FROM test WHERE DEPARTMENT_ID=1',
-                      '[1/1] - COMMIT']
+    query = "DELETE FROM json_table " \
+            "WHERE timestamp <= " \
+            "to_date('2022-08-30 00:00:00','yyyy-mm-dd hh24:mi:ss')"
+
+    assert output == [f"[1/1] - {query}",
+                       "[1/1] - COMMIT"]
 
 
 def test_iters(runner, static) -> None:
@@ -37,11 +44,15 @@ def test_iters(runner, static) -> None:
     assert result.exit_code == 0
 
     output = [l for l in result.output.split("\n") if l]
-    assert output == ['[1/5] - DELETE FROM test WHERE DEPARTMENT_ID=1',
-                      '[2/5] - DELETE FROM test WHERE DEPARTMENT_ID=2',
-                      '[2/5] - COMMIT',
-                      '[3/5] - DELETE FROM test WHERE DEPARTMENT_ID=3',
-                      '[4/5] - DELETE FROM test WHERE DEPARTMENT_ID=4',
-                      '[4/5] - COMMIT',
-                      '[5/5] - DELETE FROM test WHERE DEPARTMENT_ID=5',
-                      '[5/5] - COMMIT']
+    query = "DELETE FROM json_table " \
+            "WHERE timestamp <= " \
+            "to_date('2022-08-30 00:00:00','yyyy-mm-dd hh24:mi:ss')"
+
+    assert output == [f"[1/5] - {query}",
+                      f"[2/5] - {query}",
+                       "[2/5] - COMMIT",
+                      f"[3/5] - {query}",
+                      f"[4/5] - {query}",
+                       "[4/5] - COMMIT",
+                      f"[5/5] - {query}",
+                       "[5/5] - COMMIT"]

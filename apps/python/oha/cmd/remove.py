@@ -9,7 +9,9 @@ after how many operations commit the changes.
 """
 
 
+import datetime
 import time
+
 import click
 
 import cx_Oracle
@@ -26,31 +28,40 @@ import cx_Oracle
               help='repeat the same operation a given number of times')
 @click.option('--delay',
               type=float,
-              default=0.25,
+              default=5,
               help='time to wait before the next iteration')
 @click.option('--commit-every',
               type=int,
               default=1,
               help='after how many operations perform a commit')
+@click.option('--older',
+              type=int,
+              default=10,
+              help='days threshold to start removing data')
 @click.pass_context
 def remove(ctx,
            loop: bool,
            iters: int,
            delay: float,
-           commit_every: int) -> None:
+           commit_every: int,
+           older: int) -> None:
     """Delete records from the table"""
+ 
+    # Define the query day, the day where to start from below query
+    tstm = datetime.datetime(2022, 9, 9, 0, 0)
 
     # Define query parameters
-    table = ctx.obj.conf["database"]["table"]
-    conds = {"DEPARTMENT_ID": 0}
+    table = ctx.obj.conf["database"]["tablejson"]
 
     iters = 0 if loop else iters
     step = 1
     try:
         while loop or step <= iters:
             # Prepare query with updated conditions
-            pairs = [f"{cond}={val + step}" for cond, val in conds.items()]
-            query = f"DELETE FROM {table} WHERE {', '.join(pairs)}"
+            date = (tstm - datetime.timedelta(days=older))
+            date = date.strftime("%Y-%m-%d %H:%M:%S")
+            cond = f"timestamp <= to_date('{date}','yyyy-mm-dd hh24:mi:ss')"
+            query = f"DELETE FROM {table} WHERE {cond}"
 
             # Execute query
             ctx.obj.cur.execute(query)
@@ -73,3 +84,4 @@ def remove(ctx,
         ctx.exit(1)
     except KeyboardInterrupt as _:
         click.echo("Error - Interrupted by the user")
+        ctx.exit(1)
