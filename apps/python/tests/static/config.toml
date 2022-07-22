@@ -18,3 +18,6 @@ tablejson = "json_table"
 
 [injest]
 dumpfile = "../raw.csv"
+
+[cleanup]
+checkpoint = 1

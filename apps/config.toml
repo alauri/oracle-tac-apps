@@ -36,3 +36,6 @@ tablejson = "json_telemetry"
 
 [injest]
 dumpfile = "../raw.csv"
+
+[cleanup]
+checkpoint = 0
