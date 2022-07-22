@@ -10,6 +10,8 @@ import pytest
 
 from click.testing import CliRunner
 
+from tests import factory
+
 
 __all__ = ["get_static"]
 
@@ -54,7 +56,7 @@ def wrap_every_test(mocker):
         Nothing
     """
     # Setup: fill with any logic you want
-    mocker.patch("cx_Oracle.connect")
+    mocker.patch("cx_Oracle.connect", return_value=factory.MockOracle())
 
     yield
 
