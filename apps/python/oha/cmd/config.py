@@ -41,23 +41,6 @@ def config(ctx, info: bool) -> None:
               default=None,
               help="update the driver's password")
 @click.pass_obj
-def driver(obj, **kwargs) -> None:
-    """update section 'driver'"""
-
-    # Collect only those values different from None and update the TOML file
-    updates = {(arg, val) for arg, val in kwargs.items() if val is not None}
-    obj.conf["driver"].update(updates)
-    toml.dump(obj.conf, open(obj.filename, "w"))
-
-    click.echo("[+] - Configuration updated")
-
-
-@click.command()
-@click.option("--table",
-              type=str,
-              default=None,
-              help="update the database's table")
-@click.pass_obj
 def database(obj, **kwargs) -> None:
     """update section 'database'"""
 
@@ -69,5 +52,4 @@ def database(obj, **kwargs) -> None:
     click.echo("[+] - Configuration updated")
 
 
-config.add_command(driver)
 config.add_command(database)

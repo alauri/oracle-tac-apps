@@ -55,14 +55,14 @@ def test_username(runner, static) -> None:
         Nothing
     """
     result = runner.invoke(cli, ["-w", static,
-                                 "config", "driver",
+                                 "config", "database",
                                  "--username", "fake"])
 
     assert result.exit_code == 0
     assert "Configuration updated" in result.output
 
     _toml = OracleHA.read_toml()
-    assert _toml["driver"]["username"] == "fake"
+    assert _toml["database"]["username"] == "fake"
 
 
 def test_password(runner, static) -> None:
@@ -72,31 +72,14 @@ def test_password(runner, static) -> None:
         Nothing
     """
     result = runner.invoke(cli, ["-w", static,
-                                 "config", "driver",
+                                 "config", "database",
                                  "--password", "fake"])
 
     assert result.exit_code == 0
     assert "Configuration updated" in result.output
 
     _toml = OracleHA.read_toml()
-    assert _toml["driver"]["password"] == "fake"
-
-
-def test_table(runner, static) -> None:
-    """Invoke the sub-command ``database`` with the option ``table``.
-
-    Returns:
-        Nothing
-    """
-    result = runner.invoke(cli, ["-w", static,
-                                 "config", "database",
-                                 "--table", "fake"])
-
-    assert result.exit_code == 0
-    assert "Configuration updated" in result.output
-
-    _toml = OracleHA.read_toml()
-    assert _toml["database"]["table"] == "fake"
+    assert _toml["database"]["password"] == "fake"
 
 
 def teardown_module(module) -> None:
