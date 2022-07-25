@@ -59,6 +59,9 @@ class OracleHA:
 def cli(ctx, workdir: str, dsn: int) -> None:
     """Oracle High Availability CLI in Python"""
 
+    # Define teardown callbacks
+    ctx.call_on_close(_on_close)
+
     # Read the configuration file
     tomlfile = toml.load(os.path.join(os.path.abspath(workdir), "config.toml"))
 
@@ -69,6 +72,9 @@ def cli(ctx, workdir: str, dsn: int) -> None:
     # Initialize Click context with TOML configuration file
     try:
         ctx.obj = OracleHA(tomlfile, workdir, dsn)
+
+        # Print DB context info
+        click.echo(_get_db_info())
 
         # Retrieve the ID of the first row from the raw table
         query = f"SELECT id " \
@@ -88,6 +94,38 @@ def cli(ctx, workdir: str, dsn: int) -> None:
     except cx_Oracle.DatabaseError as err:
         click.echo(err)
         ctx.exit(1)
+
+
+@click.pass_context
+def _get_db_info(ctx) -> str:
+    """Query the database to retrieve info about the context.
+
+    Args:
+        ctx: the Click context.
+
+    Returns:
+        DB context info.
+    """
+    query = "SELECT " \
+            "SYS_CONTEXT('USERENV', 'DB_UNIQUE_NAME') AS DB_UNIQUE_NAME, " \
+            "SYS_CONTEXT('USERENV', 'SERVER_HOST') AS HOST " \
+            "FROM DUAL"
+    db_ctx = ctx.obj.cur.execute(query).fetchone()
+    return db_ctx
+
+
+@click.pass_context
+def _on_close(ctx) -> None:
+    """Teardown connections and configuration.
+
+    Returns:
+        Nothing
+    """
+    # Print DB context info
+    click.echo(_get_db_info())
+
+    # Close the cursor
+    ctx.obj.cur.close()
 
 
 # Register commands
