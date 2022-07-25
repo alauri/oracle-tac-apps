@@ -9,16 +9,15 @@ from oha import cli
 import json
 
 
-def test_cli_info(runner, static) -> None:
+def test_cli(runner, static) -> None:
     """Invoke the CLI by asking information about the configuration.
 
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static, "--info"])
+    result = runner.invoke(cli.cli, ["-w", static])
     assert result.exit_code == 0
-    assert result.output.startswith("{")
-    assert result.output.endswith("}\n")
+    assert result.output.startswith("Usage: ")
 
 
 def test_cli_error(runner, static) -> None:

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""Command ``update`` to change already existing records within the db.
+"""Command ``cleanup`` to change already existing records within the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -44,40 +44,38 @@ def cleanup(ctx,
             commit_every: int) -> None:
     """Update records within the database"""
 
-    # Get database information
-    raw_table = ctx.obj.conf["database"]["tableraw"]
-    json_table = ctx.obj.conf["database"]["tablejson"]
-    checkpoint = ctx.obj.conf["cleanup"]["checkpoint"]
+    # Get the first id to read from the table raw
+    checkpoint = ctx.obj.conf['cleanup']['checkpoint']
 
     iters = 0 if loop else iters
     step = 1
     try:
         while loop or step <= iters:
-            # TODO: handle the error when a checkpoint does not exist
             query = f"SELECT * " \
-                    f"FROM {raw_table} " \
+                    f"FROM {ctx.obj.conf['database']['tableraw']} " \
                     f"WHERE id={checkpoint}"
-            res = ctx.obj.cur.execute(query)
+            res = ctx.obj.cur.execute(query).fetchone()
             click.echo(f"[{step}/{iters}] - {query}")
 
             # Get and clean information
-            _, timestamp, sensorid, data = res.fetchone()
+            if res is None:
+                click.echo("[{step}/{iters}] - No row to clean up. Exit.")
+                ctx.exit(0)
+
+            _, timestamp, sensorid, data = res
             timestamp = f"to_date('{datetime.fromtimestamp(timestamp)}'," \
                         "'yyyy-mm-dd hh24:mi:ss')"
             sensorid = consts.SENSORS[sensorid]
             data = json.dumps(dict([tuple(p.split("=")) for p in data.split("|")]))
 
             # Prepare the query
-            query = f"INSERT INTO {json_table}(timestamp,sensorid,data) " \
+            query = f"INSERT INTO {ctx.obj.conf['database']['tablejson']}" \
+                    f"(timestamp,sensorid,data) " \
                     f"VALUES({timestamp},'{sensorid}','{data}')"
 
             # Execute query
-            try:
-                ctx.obj.cur.execute(query)
-                click.echo(f"[{step}/{iters}] - {query}")
-            except cx_Oracle.IntegrityError as err:
-                click.echo(err)
-                click.exit(1)
+            ctx.obj.cur.execute(query)
+            click.echo(f"[{step}/{iters}] - {query}")
 
             # Commit changes
             if step % commit_every == 0:

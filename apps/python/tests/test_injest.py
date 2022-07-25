@@ -6,13 +6,16 @@
 
 from oha.cli import cli
 
+from tests.factory import MockResponse
 
-def test_no_args(runner, static) -> None:
+
+def test_no_args(mocker, runner, static) -> None:
     """Invoke the command ``injest`` with no options.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static,
                                  "injest"])
 
@@ -25,12 +28,13 @@ def test_no_args(runner, static) -> None:
         "[1/1] - COMMIT"]
 
 
-def test_args(runner, static) -> None:
+def test_args(mocker, runner, static) -> None:
     """Invoke the command ``injest`` with the options ``iters``.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static,
                                  "injest",
                                  "--iters", 5,

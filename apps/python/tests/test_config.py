@@ -8,7 +8,9 @@ import shutil
 import os
 import toml
 
-from oha.cli import cli, OracleHA
+from oha.cli import cli
+
+from tests.factory import MockResponse
 
 
 def setup_module(module) -> None:
@@ -25,36 +27,39 @@ def setup_module(module) -> None:
     shutil.copyfile(src, dst)
 
 
-def test_no_args(runner, static) -> None:
+def test_no_args(mocker, runner, static) -> None:
     """Invoke the command ``config`` with no options.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static, "config"])
 
     assert result.exit_code == 0
 
 
-def test_info(runner, static) -> None:
+def test_info(mocker, runner, static) -> None:
     """Invoke the command ``config`` with the option ``info``.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static, "config", "--info"])
 
     assert result.exit_code == 0
-    assert "Current configuration" in result.output
+    assert result.output.startswith("{")
     assert "Usage:" not in result.output
 
 
-def test_username(runner, static) -> None:
+def test_username(mocker, runner, static) -> None:
     """Invoke the sub-command ``driver`` with the option ``username``.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static,
                                  "config", "database",
                                  "--username", "fake"])
@@ -66,12 +71,13 @@ def test_username(runner, static) -> None:
     assert _toml["database"]["username"] == "fake"
 
 
-def test_password(runner, static) -> None:
+def test_password(mocker, runner, static) -> None:
     """Invoke the sub-command ``driver`` with the option ``password``.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static,
                                  "config", "database",
                                  "--password", "fake"])

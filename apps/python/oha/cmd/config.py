@@ -9,6 +9,7 @@ for each value of the section.
 """
 
 
+import pprint
 import click
 import toml
 import os
@@ -25,8 +26,8 @@ def config(ctx, info: bool) -> None:
 
     # Print current configuration info and exit
     if info:
-        click.echo(f"[+] - Current configuration: {ctx.obj.conf}")
-        return
+        pprint.pprint(ctx.obj.conf, indent=4)
+        ctx.exit(0)
 
     if ctx.invoked_subcommand is None:
         click.echo(config.get_help(ctx))
