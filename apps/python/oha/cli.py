@@ -80,11 +80,11 @@ def cli(ctx, workdir: str, dsn: int) -> None:
         # Retrieve the ID of the first row from the json table
         query = f"SELECT COUNT(*) " \
                 f"FROM {ctx.obj.conf['database']['tablejson']}"
-        checkpoint = ctx.obj.cur.execute(query).fetchone()[0]
-        checkpoint += headraw
+        tail = ctx.obj.cur.execute(query).fetchone()[0]
+        tail += headraw
 
         ctx.obj.conf["injest"]["head"] = headraw
-        ctx.obj.conf["cleanup"]["checkpoint"] = checkpoint
+        ctx.obj.conf["cleanup"]["tail"] = tail
     except cx_Oracle.DatabaseError as err:
         click.echo(err)
         ctx.exit(1)
