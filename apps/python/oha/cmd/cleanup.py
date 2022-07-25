@@ -69,7 +69,7 @@ def cleanup(ctx,
 
             # Prepare the query
             query = f"INSERT INTO {json_table}(timestamp,sensorid,data) " \
-                    f"VALUES({timestamp},'{sensorid}',JSON_OBJECT({data}))"
+                    f"VALUES({timestamp},'{sensorid}','{data}')"
 
             # Execute query
             try:
