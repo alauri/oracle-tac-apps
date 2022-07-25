@@ -1,6 +1,0 @@
----
-
-- hosts: os_OracleLinux_8.6
-  roles:
-    - role: ol8.6
-      tags: ol8.6

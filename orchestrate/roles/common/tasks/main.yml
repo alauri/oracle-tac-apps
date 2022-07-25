@@ -18,14 +18,3 @@
       - git
     state: present
 
-# https://yum.oracle.com/oracle-instant-client.html
-- name: Install Oracle Instant Client
-  become: true
-  become_user: root
-  become_method: su
-  ansible.builtin.dnf:
-    name:
-      - oracle-instantclient-release-el8
-      - oracle-instantclient-basic
-    state: latest
-  ignore_errors: yes
