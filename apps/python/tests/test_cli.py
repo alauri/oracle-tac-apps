@@ -18,7 +18,7 @@ def test_cli_info(runner, static) -> None:
     result = runner.invoke(cli.cli, ["-w", static, "--info"])
     assert result.exit_code == 0
     assert result.output.startswith("{")
-    assert result.output.endswith("{")
+    assert result.output.endswith("}\n")
 
 
 def test_cli_error(runner, static) -> None:

@@ -34,7 +34,7 @@
 - name: Create a directory if it does not exist
   ansible.builtin.file:
     # TODO: Put this absolute path within a variable
-    path: ~/workspace/applications/py/Oracle-HA
+    path: ~/workspace/applications/py/
     state: directory
     owner: oracle
     mode: '0755'
@@ -44,14 +44,14 @@
     # TODO: find a better way to access the Python application example, maybe
     # with an ansible variable
     src: ../../../../apps/python/
-    dest: ~/workspace/applications/py/Oracle-HA/
+    dest: ~/workspace/applications/py/
     owner: oracle
     group: oracle
     mode: '0644'
 
 - name: Enable poetry and install dependencies
   ansible.builtin.shell:
-    chdir: ~/workspace/applications/py/Oracle-HA/
+    chdir: ~/workspace/applications/py/
     cmd: . ~/.bash_profile && poetry install
 
 - name: Delete Poetry installation script

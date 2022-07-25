@@ -2,8 +2,11 @@
   ansible.builtin.copy:
     # TODO: find a better way to access the Python application example, maybe
     # with an ansible variable
-    src: ../../../../apps/config.toml
+    src: "{{ item }}"
     dest: ~/workspace/applications/
     owner: oracle
     group: oracle
     mode: '0644'
+  with_items:
+     - ../../../../apps/config.toml
+     - ../../../../apps/raw.csv

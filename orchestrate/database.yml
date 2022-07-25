@@ -1,0 +1,6 @@
+---
+
+- hosts: os_OracleLinux
+  roles:
+    - role: oraclelinux
+      tags: [ ol, never ]

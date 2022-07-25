@@ -7,6 +7,6 @@
     - role: python
       tags: py
     - role: java
-      tags: java
+      tags: [ java, never ]
     - role: golang
-      tags: go
+      tags: [ go, never ]
