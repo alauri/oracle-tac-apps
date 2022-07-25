@@ -33,7 +33,6 @@
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    # TODO: Put this absolute path within a variable
     path: ~/workspace/applications/py/
     state: directory
     owner: oracle
@@ -41,8 +40,6 @@
 
 - name: Copy the whole Python application example
   ansible.builtin.copy:
-    # TODO: find a better way to access the Python application example, maybe
-    # with an ansible variable
     src: ../../../../apps/python/
     dest: ~/workspace/applications/py/
     owner: oracle

@@ -1,7 +1,5 @@
 - name: Copy the basic configuration file for all the app examples
   ansible.builtin.copy:
-    # TODO: find a better way to access the Python application example, maybe
-    # with an ansible variable
     src: "{{ item }}"
     dest: ~/workspace/applications/
     owner: oracle
