@@ -60,7 +60,7 @@ def cleanup(ctx,
             # Get and clean information
             if res is None:
                 click.echo(f"[{step}/{iters}] - No row to clean up. Exit.")
-                ctx.exit(0)
+                break
 
             _, timestamp, sensorid, data = res
             timestamp = f"to_date('{datetime.fromtimestamp(timestamp)}'," \
@@ -85,14 +85,14 @@ def cleanup(ctx,
             step += 1
             tail += 1
             time.sleep(delay)
-
-        # Check the last commit
-        if iters % commit_every != 0:
-            ctx.obj.conn.commit()
-            click.echo(f"[{iters}/{iters}] - COMMIT")
     except cx_Oracle.DatabaseError as err:
         click.echo(err)
         ctx.exit(1)
     except KeyboardInterrupt as _:
         click.echo("Error - Interrupted by the user")
         ctx.exit(1)
+    finally:
+        # Check for the last commit
+        if iters % commit_every != 0:
+            ctx.obj.conn.commit()
+            click.echo(f"[{iters}/{iters}] - COMMIT")
