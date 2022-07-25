@@ -6,7 +6,6 @@
 
 from typing import Dict
 
-import pprint
 import os
 
 import click
@@ -48,10 +47,6 @@ class OracleHA:
 
 
 @click.group(invoke_without_command=True)
-@click.option('--info/--no-info',
-              type=bool,
-              default=False,
-              help="Information about the current configuration")
 @click.option("-w", "--workdir",
               type=str,
               default=os.path.join(os.path.dirname(__file__), "../.."),
@@ -61,15 +56,11 @@ class OracleHA:
               default=1,
               help="The connection string to use")
 @click.pass_context
-def cli(ctx, info: bool, workdir: str, dsn: int) -> None:
+def cli(ctx, workdir: str, dsn: int) -> None:
     """Oracle High Availability CLI in Python"""
 
     # Read the configuration file
     tomlfile = toml.load(os.path.join(os.path.abspath(workdir), "config.toml"))
-
-    if info:
-        pprint.pprint(tomlfile, indent=4)
-        ctx.exit(0)
 
     if ctx.invoked_subcommand is None:
         click.echo(cli.get_help(ctx))
@@ -78,6 +69,22 @@ def cli(ctx, info: bool, workdir: str, dsn: int) -> None:
     # Initialize Click context with TOML configuration file
     try:
         ctx.obj = OracleHA(tomlfile, workdir, dsn)
+
+        # Retrieve the ID of the first row from the raw table
+        query = f"SELECT id " \
+                f"FROM {ctx.obj.conf['database']['tableraw']} " \
+                f"WHERE rownum=1"
+        headraw = ctx.obj.cur.execute(query).fetchone()
+        headraw = 0 if headraw is None else int(headraw[0])
+
+        # Retrieve the ID of the first row from the json table
+        query = f"SELECT COUNT(*) " \
+                f"FROM {ctx.obj.conf['database']['tablejson']}"
+        checkpoint = ctx.obj.cur.execute(query).fetchone()[0]
+        checkpoint += headraw
+
+        ctx.obj.conf["injest"]["head"] = headraw
+        ctx.obj.conf["cleanup"]["checkpoint"] = checkpoint
     except cx_Oracle.DatabaseError as err:
         click.echo(err)
         ctx.exit(1)

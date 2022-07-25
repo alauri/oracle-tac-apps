@@ -36,15 +36,14 @@ def injest(ctx,
     """Insert new records within the table"""
 
     # Define query parameters
-    table = ctx.obj.conf["database"]["tableraw"]
     data = open(ctx.obj.conf["injest"]["dumpfile"]).readlines()
-
     try:
         for step, line in enumerate(data[:iters]):
             step += 1
 
             # Prepare the query
-            query = f"INSERT INTO {table}(timestamp,sensorid,data) " \
+            query = f"INSERT INTO {ctx.obj.conf['database']['tableraw']}" \
+                    f"(timestamp,sensorid,data) " \
                     f"VALUES({line.strip()})"
 
             # Execute query

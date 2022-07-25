@@ -6,13 +6,16 @@
 
 from oha.cli import cli
 
+from tests.factory import MockResponse
 
-def test_no_args(runner, static) -> None:
+
+def test_no_args(mocker, runner, static) -> None:
     """Invoke the command ``remove`` with no options.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static,
                                  "remove",
                                  "--delay", 0.05,
@@ -29,12 +32,13 @@ def test_no_args(runner, static) -> None:
                        "[1/1] - COMMIT"]
 
 
-def test_iters(runner, static) -> None:
+def test_iters(mocker, runner, static) -> None:
     """Invoke the command `remove` with the options ``iters``.
 
     Returns:
         Nothing
     """
+    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
     result = runner.invoke(cli, ["-w", static, 'remove',
                                  "--iters", 5,
                                  "--delay", 0.05,

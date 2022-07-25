@@ -15,10 +15,10 @@ def test_no_args(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(return_value=(None,
-                                                      1662674400,
-                                                      3,
-                                                      "Right=False|Left=True"))
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        (1, ), (0, ),
+        (None, 1662674400, 3, "Right=False|Left=True")
+    ])
     result = runner.invoke(cli, ["-w", static, 'cleanup'])
     assert result.exit_code == 0
 
@@ -36,6 +36,7 @@ def test_args(mocker, runner, static) -> None:
         Nothing
     """
     MockResponse.fetchone = mocker.Mock(side_effect=[
+        (1, ), (0, ),
         (None, 1662674400, 3, "Right=False|Left=True"),
         (None, 1658351188, 2, "Right=False|Left=True"),
         (None, 1658351188, 2, "Right=False|Left=True"),
