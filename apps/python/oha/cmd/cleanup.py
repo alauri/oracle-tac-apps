@@ -45,7 +45,7 @@ def cleanup(ctx,
     """Update records within the database"""
 
     # Get the first id to read from the table raw
-    checkpoint = ctx.obj.conf['cleanup']['checkpoint']
+    tail = ctx.obj.conf['cleanup']['tail']
 
     iters = 0 if loop else iters
     step = 1
@@ -53,13 +53,13 @@ def cleanup(ctx,
         while loop or step <= iters:
             query = f"SELECT * " \
                     f"FROM {ctx.obj.conf['database']['tableraw']} " \
-                    f"WHERE id={checkpoint}"
+                    f"WHERE id={tail}"
             res = ctx.obj.cur.execute(query).fetchone()
             click.echo(f"[{step}/{iters}] - {query}")
 
             # Get and clean information
             if res is None:
-                click.echo("[{step}/{iters}] - No row to clean up. Exit.")
+                click.echo(f"[{step}/{iters}] - No row to clean up. Exit.")
                 ctx.exit(0)
 
             _, timestamp, sensorid, data = res
@@ -83,10 +83,8 @@ def cleanup(ctx,
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
             step += 1
-            checkpoint += 1
+            tail += 1
             time.sleep(delay)
-
-        # TODO: save checkpoint
 
         # Check the last commit
         if iters % commit_every != 0:
