@@ -15,21 +15,18 @@ def test_no_args(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        ('server1', 'vm1'), (1, ), (0, ),
+        ('server1', 'vm1'), (1, ), (0, ),
+    ])
     result = runner.invoke(cli, ["-w", static,
                                  "remove",
-                                 "--delay", 0.05,
-                                 "--older", 10])
+                                 "--delay", 0.05])
 
     assert result.exit_code == 0
-
-    output = [l for l in result.output.split("\n") if l]
-    query = "DELETE FROM json_table " \
-            "WHERE timestamp <= " \
-            "to_date('2022-08-30 00:00:00','yyyy-mm-dd hh24:mi:ss')"
-
-    assert output == [f"[1/1] - {query}",
-                       "[1/1] - COMMIT"]
+    assert result.output.count("FROM json_table WHERE LapTime='NaT'") == 1
+    assert result.output.count("COMMIT") == 1
+    assert result.output.count("('server1', 'vm1')") == 2
 
 
 def test_iters(mocker, runner, static) -> None:
@@ -38,7 +35,10 @@ def test_iters(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        ('server1', 'vm1'), (1, ), (0, ),
+        ('server1', 'vm1'), (1, ), (0, ),
+    ])
     result = runner.invoke(cli, ["-w", static, 'remove',
                                  "--iters", 5,
                                  "--delay", 0.05,
@@ -46,17 +46,6 @@ def test_iters(mocker, runner, static) -> None:
                                  ])
 
     assert result.exit_code == 0
-
-    output = [l for l in result.output.split("\n") if l]
-    query = "DELETE FROM json_table " \
-            "WHERE timestamp <= " \
-            "to_date('2022-08-30 00:00:00','yyyy-mm-dd hh24:mi:ss')"
-
-    assert output == [f"[1/5] - {query}",
-                      f"[2/5] - {query}",
-                       "[2/5] - COMMIT",
-                      f"[3/5] - {query}",
-                      f"[4/5] - {query}",
-                       "[4/5] - COMMIT",
-                      f"[5/5] - {query}",
-                       "[5/5] - COMMIT"]
+    assert result.output.count("FROM json_table WHERE LapTime='NaT'") == 5
+    assert result.output.count("COMMIT") == 3
+    assert result.output.count("('server1', 'vm1')") == 2

@@ -33,7 +33,10 @@ def test_no_args(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        ('server1', 'vm1'), (1, ), (0, ),
+        ('server1', 'vm1'), (1, ), (0, ),
+    ])
     result = runner.invoke(cli, ["-w", static, "config"])
 
     assert result.exit_code == 0
@@ -45,11 +48,14 @@ def test_info(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        ('server1', 'vm1'), (1, ), (0, ),
+        ('server1', 'vm1'), (1, ), (0, ),
+    ])
     result = runner.invoke(cli, ["-w", static, "config", "--info"])
 
     assert result.exit_code == 0
-    assert result.output.startswith("{")
+    assert result.output.startswith("(")
     assert "Usage:" not in result.output
 
 
@@ -59,7 +65,10 @@ def test_username(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        ('server1', 'vm1'), (1, ), (0, ),
+        ('server1', 'vm1'), (1, ), (0, ),
+    ])
     result = runner.invoke(cli, ["-w", static,
                                  "config", "database",
                                  "--username", "fake"])
@@ -77,7 +86,10 @@ def test_password(mocker, runner, static) -> None:
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[(1, ), (1, )])
+    MockResponse.fetchone = mocker.Mock(side_effect=[
+        ('server1', 'vm1'), (1, ), (0, ),
+        ('server1', 'vm1'), (1, ), (0, ),
+    ])
     result = runner.invoke(cli, ["-w", static,
                                  "config", "database",
                                  "--password", "fake"])

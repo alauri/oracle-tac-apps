@@ -43,7 +43,7 @@ def injest(ctx,
 
             # Prepare the query
             query = f"INSERT INTO {ctx.obj.conf['database']['tableraw']}" \
-                    f"(timestamp,sensorid,data) " \
+                    f"(year,track,data) " \
                     f"VALUES({line.strip()})"
 
             # Execute query
