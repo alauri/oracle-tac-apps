@@ -121,6 +121,10 @@ def _on_close(ctx) -> None:
     Returns:
         Nothing
     """
+    # Check db cursor
+    if ctx.obj is None:
+        return
+
     # Print DB context info
     click.echo(_get_db_info())
 
