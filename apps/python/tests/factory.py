@@ -15,6 +15,9 @@ class MockCursor:
     def execute(self, *args, **kwargs):
         return MockResponse()
 
+    def close(self, *args, **kwargs):
+        return
+
 
 class MockOracle:
 

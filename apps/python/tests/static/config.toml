@@ -17,7 +17,6 @@ tableraw = "raw_table"
 tablejson = "json_table"
 
 [injest]
-dumpfile = "../raw.csv"
+dumpfile = "../raw.txt"
 
 [cleanup]
-checkpoint = 1

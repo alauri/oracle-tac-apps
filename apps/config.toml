@@ -35,6 +35,6 @@ tableraw = "raw_telemetry"
 tablejson = "json_telemetry"
 
 [injest]
-dumpfile = "../raw.csv"
+dumpfile = "../raw.txt"
 
 [cleanup]

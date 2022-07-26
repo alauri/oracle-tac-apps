@@ -9,14 +9,10 @@ after how many operations commit the changes.
 """
 
 
-from datetime import datetime
 import time
 import click
-import json
 
 import cx_Oracle
-
-from oha.cmd import consts
 
 
 @click.command()
@@ -62,16 +58,14 @@ def cleanup(ctx,
                 click.echo(f"[{step}/{iters}] - No row to clean up. Exit.")
                 break
 
-            _, timestamp, sensorid, data = res
-            timestamp = f"to_date('{datetime.fromtimestamp(timestamp)}'," \
-                        "'yyyy-mm-dd hh24:mi:ss')"
-            sensorid = consts.SENSORS[sensorid]
-            data = json.dumps(dict([tuple(p.split("=")) for p in data.split("|")]))
+            _, year, track, data = res
+            lt, ln, team, driver = data.split("|")
+            lt = lt.replace("0 days ", "") if lt != "NaT" else lt
 
             # Prepare the query
             query = f"INSERT INTO {ctx.obj.conf['database']['tablejson']}" \
-                    f"(timestamp,sensorid,data) " \
-                    f"VALUES({timestamp},'{sensorid}','{data}')"
+                    f"(year,track,laptime,lapnumber,team,driver) " \
+                    f"VALUES({year},'{track}','{lt}',{ln},'{team}','{driver}')"
 
             # Execute query
             ctx.obj.cur.execute(query)
