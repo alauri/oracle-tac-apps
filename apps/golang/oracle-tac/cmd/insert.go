@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/alauri/oracle-ha-apps/oracle-ha/db"
+	"github.com/alauri/oracle-tac-apps/oracle-tac/db"
 )
 
 // insertCmd represents the insert command

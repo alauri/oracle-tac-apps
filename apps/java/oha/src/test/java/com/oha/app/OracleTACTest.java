@@ -10,11 +10,11 @@ import org.junit.Test;
 
 
 /**
- * Unit test for OracleHA app.
+ * Unit test for OracleTAC app.
  */
-public class OracleHATest 
+public class OracleTACTest 
 {
-    OracleHA app = new OracleHA();
+    OracleTAC app = new OracleTAC();
     CommandLine cmd = new CommandLine(app);
     StringWriter sw = new StringWriter();
 

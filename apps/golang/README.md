@@ -7,16 +7,16 @@ The Golang version of the application using the driver **cx_Oracle**[^1].
 
 Install Go dependencies and access the help menu:
 
-    $ cd oracle-ha
+    $ cd oracle-tac
     $ go install
-    $ oracle-ha --help
+    $ oracle-tac --help
 
 
 # Run tests
 
 To run the tests suite type:
 
-    $ cd oracle-ha
+    $ cd oracle-tac
     $ go test ./...
 
 

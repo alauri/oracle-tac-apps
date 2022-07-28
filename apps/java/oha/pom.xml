@@ -9,7 +9,7 @@
   <version>0.1.0</version>
 
   <name>oha</name>
-  <url>https://github.com/alauri/oracle-ha-apps</url>
+  <url>https://github.com/alauri/oracle-tac-apps</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

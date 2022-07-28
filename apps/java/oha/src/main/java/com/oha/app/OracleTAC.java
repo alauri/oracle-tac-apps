@@ -11,9 +11,9 @@ import java.io.File;
 import java.util.concurrent.Callable;
 
 
-@Command(name = "oracle-ha",
+@Command(name = "oracle-tac-java",
          mixinStandardHelpOptions = true,
-         version = "oracle-ha 0.1.0",
+         version = "oracle-tac 0.1.0",
          description = "A Java application for the High Availability in Oracle.",
          subcommands = {
              Config.class,
@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
              Reset.class,
              Update.class
          })
-class OracleHA implements Callable<Integer> {
+class OracleTAC implements Callable<Integer> {
 
     @Spec CommandSpec spec;
 
@@ -33,7 +33,7 @@ class OracleHA implements Callable<Integer> {
     }
 
     public static void main(String... args) {
-        int exitCode = new CommandLine(new OracleHA()).execute(args);
+        int exitCode = new CommandLine(new OracleTAC()).execute(args);
         System.exit(exitCode);
     }
 }

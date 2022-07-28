@@ -12,14 +12,14 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	_ "github.com/alauri/oracle-ha-apps/oracle-ha/db"
+	_ "github.com/alauri/oracle-tac-apps/oracle-tac/db"
 )
 
 var workdir string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:    "oracle-ha",
+	Use:    "oracle-tac-go",
 	Short:  "Oracle High Availability CLI in Golang",
 	Long:   `Oracle High Availability CLI in Golang`,
 	PreRun: func(cmd *cobra.Command, args []string) {},

@@ -10,7 +10,7 @@ help menu:
 
     $ poetry install
     $ poetry shell
-    $ oracle-ha --help
+    $ oracle-tac-py --help
 
 
 # Run tests
