@@ -40,6 +40,9 @@ def cleanup(ctx,
             commit_every: int) -> None:
     """Update records within the database"""
 
+    # Set connection attriutes
+    ctx.obj.conn.module = "oha.cmd.cleanup"
+
     # Get the first id to read from the table raw
     tail = ctx.obj.conf['cleanup']['tail']
 
@@ -47,6 +50,7 @@ def cleanup(ctx,
     step = 1
     try:
         while loop or step <= iters:
+            ctx.obj.conn.action = "SEL raw"
             query = f"SELECT * " \
                     f"FROM {ctx.obj.conf['database']['tableraw']} " \
                     f"WHERE id={tail}"
@@ -63,6 +67,7 @@ def cleanup(ctx,
             lt = lt.replace("0 days ", "") if lt != "NaT" else lt
 
             # Prepare the query
+            ctx.obj.conn.action = "INS json"
             query = f"INSERT INTO {ctx.obj.conf['database']['tablejson']}" \
                     f"(year,track,laptime,lapnumber,team,driver) " \
                     f"VALUES({year},'{track}','{lt}',{ln},'{team}','{driver}')"
@@ -73,6 +78,7 @@ def cleanup(ctx,
 
             # Commit changes
             if step % commit_every == 0:
+                ctx.obj.conn.action = "COM json"
                 ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
@@ -88,5 +94,6 @@ def cleanup(ctx,
     finally:
         # Check for the last commit
         if iters % commit_every != 0:
+            ctx.obj.conn.action = "COM json"
             ctx.obj.conn.commit()
             click.echo(f"[{iters}/{iters}] - COMMIT")

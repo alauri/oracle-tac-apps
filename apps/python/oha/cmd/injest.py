@@ -35,6 +35,9 @@ def injest(ctx,
            commit_every: int) -> None:
     """Insert new records within the table"""
 
+    # Set connection attriutes
+    ctx.obj.conn.module = "oha.cmd.injest"
+
     # Define query parameters
     data = open(ctx.obj.conf["injest"]["dumpfile"]).readlines()
     try:
@@ -42,6 +45,7 @@ def injest(ctx,
             step += 1
 
             # Prepare the query
+            ctx.obj.conn.action = "INS raw"
             query = f"INSERT INTO {ctx.obj.conf['database']['tableraw']}" \
                     f"(year,track,data) " \
                     f"VALUES({line.strip()})"
@@ -52,6 +56,7 @@ def injest(ctx,
 
             # Commit changes
             if step % commit_every == 0:
+                ctx.obj.conn.action = "COM raw"
                 ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
@@ -60,6 +65,7 @@ def injest(ctx,
 
         # Check the last commit
         if iters % commit_every != 0:
+            ctx.obj.conn.action = "COM raw"
             ctx.obj.conn.commit()
             click.echo(f"[{iters}/{iters}] - COMMIT")
     except cx_Oracle.DatabaseError as err:
@@ -68,3 +74,9 @@ def injest(ctx,
     except KeyboardInterrupt as _:
         click.echo("Error - Interrupted by the user")
         ctx.exit(1)
+    finally:
+        # Check for the last commit
+        if iters % commit_every != 0:
+            ctx.obj.conn.action = "COM raw"
+            ctx.obj.conn.commit()
+            click.echo(f"[{iters}/{iters}] - COMMIT")

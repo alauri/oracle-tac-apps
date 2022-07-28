@@ -39,10 +39,14 @@ class OracleHA:
         Returns:
             Nothing
         """
+        # Initialize connection and set the tracing metadata
         self.conn = cx_Oracle.connect(
             user=self.conf["database"]["username"],
             password=self.conf["database"]["password"],
             dsn=self.conf["database"][f"dsn{connstr}"])
+        self.conn.client_identifier = "py-app"
+
+        # Get the cursor
         self.cur = self.conn.cursor()
 
 
@@ -52,7 +56,7 @@ class OracleHA:
               default=os.path.join(os.path.dirname(__file__), "../.."),
               help="The absolute path of the working folder")
 @click.option("-d", "--dsn",
-              type=click.IntRange(min=1, max=5),
+              type=click.IntRange(min=1, max=6),
               default=1,
               help="The connection string to use")
 @click.pass_context
@@ -106,6 +110,10 @@ def _get_db_info(ctx) -> str:
     Returns:
         DB context info.
     """
+    # Set connection attriutes
+    ctx.obj.conn.action = "SEL ctx"
+    ctx.obj.conn.module = "oha.cli"
+
     query = "SELECT " \
             "SYS_CONTEXT('USERENV', 'DB_UNIQUE_NAME') AS DB_UNIQUE_NAME, " \
             "SYS_CONTEXT('USERENV', 'SERVER_HOST') AS HOST " \
@@ -125,11 +133,15 @@ def _on_close(ctx) -> None:
     if ctx.obj is None:
         return
 
-    # Print DB context info
-    click.echo(_get_db_info())
+    try:
+        # Print DB context info
+        click.echo(_get_db_info())
 
-    # Close the cursor
-    ctx.obj.cur.close()
+        # Close the cursor
+        ctx.obj.cur.close()
+    except cx_Oracle.DatabaseError as err:
+        click.echo(err)
+        ctx.exit(1)
 
 
 # Register commands

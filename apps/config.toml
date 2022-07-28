@@ -28,7 +28,18 @@ dsn4 = """(DESCRIPTION = \
         (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
         (CONNECT_DATA=(SERVICE_NAME = mygoodappsvc))) \
 """
-dsn5 = "HR"
+dsn5 = """(DESCRIPTION = \
+        (CONNECT_TIMEOUT=120)(RETRY_COUNT=30) \
+        (RETRY_DELAY=3)(TRANSPORT_CONNECT_TIMEOUT=3) \
+        (ADDRESS_LIST = \
+        (LOAD_BALANCE=on) \
+        (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb01)(PORT=1521))) \
+        (ADDRESS_LIST = \
+        (LOAD_BALANCE=on) \
+        (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
+        (CONNECT_DATA=(SERVICE_NAME = myacappsvc))) \
+"""
+dsn6 = "HR"
 
 # Database schema
 tableraw = "raw_telemetry"
