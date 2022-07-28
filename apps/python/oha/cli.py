@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""A Python application for the High Availability in Oracle"""
+"""The Python application"""
 
 
 from typing import Dict
@@ -23,7 +23,7 @@ from oha.cmd import (
 )
 
 
-class OracleHA:
+class OracleTAC:
 
     def __init__(self, tomlfile: Dict, workdir: str, dsn: int):
         self.workdir = workdir
@@ -75,7 +75,7 @@ def cli(ctx, workdir: str, dsn: int) -> None:
 
     # Initialize Click context with TOML configuration file
     try:
-        ctx.obj = OracleHA(tomlfile, workdir, dsn)
+        ctx.obj = OracleTAC(tomlfile, workdir, dsn)
 
         # Print DB context info
         click.echo(_get_db_info())

@@ -19,7 +19,7 @@ the applicaton lives.
 The full list of commands can be retrieved by accessing the help menu of the
 CLI:
 
-    oracle-ha --help
+    oracle-tac-<py|go|java> --help
 
 which will return the following:
 

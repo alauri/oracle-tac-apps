@@ -1,4 +1,4 @@
-module github.com/alauri/oracle-ha-apps
+module github.com/alauri/oracle-tac-apps
 
 go 1.18
 

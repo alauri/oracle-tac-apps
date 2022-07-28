@@ -26,6 +26,6 @@ func Test_Root(t *testing.T) {
 	rootCmd.SetArgs([]string{"-w", static, "-d", "5"})
 	rootCmd.Execute()
 
-	expected := "Use \"oracle-ha [command] --help"
+	expected := "Use \"oracle-tac [command] --help"
 	assert.Contains(t, actual.String(), expected)
 }

@@ -10,7 +10,7 @@ the help menu:
 
     $ cd oha
     $ mvn package
-    $ java -cp "<abs-picocli-jar-path>:<target-jar-path>" com.oha.app.OracleHA --help
+    $ java -cp "<abs-picocli-jar-path>:<target-jar-path>" com.oha.app.OracleTAC --help
 
 
 # Run tests

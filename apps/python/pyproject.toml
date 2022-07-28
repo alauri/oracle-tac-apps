@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "oracle-ha-app"
+name = "oracle-tac-app"
 version = "0.1.0"
 description = "A Python application for the High Availability in Oracle"
 authors = ["Andrea Lauri <andrea.lauri86@gmail.com>"]
@@ -25,7 +25,7 @@ pytest = "^7.1.2"
 pytest-mock = "^3.7.0"
 
 [tool.poetry.scripts]
-oracle-ha = "oha.__main__:main"
+oracle-tac-py = "oha.__main__:main"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
