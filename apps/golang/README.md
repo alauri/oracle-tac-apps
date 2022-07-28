@@ -1,18 +1,14 @@
-# Oracle HA in Golang
+# The Golang application
 
-This is the Golang version of the application using the driver **cx_Oracle**[^1]
-to get advantage of the Oracle High Availability.
+The Golang version of the application using the driver **cx_Oracle**[^1].
 
 
 # Installation and first execution
 
-To install the CLI move under the folder **oracle-ha** and type:
+Install Go dependencies and access the help menu:
 
+    $ cd oracle-ha
     $ go install
-
-This will compile and install the CLI in your Golang's bin folder and make it
-available at system level:
-
     $ oracle-ha --help
 
 
@@ -20,6 +16,7 @@ available at system level:
 
 To run the tests suite type:
 
+    $ cd oracle-ha
     $ go test ./...
 
 

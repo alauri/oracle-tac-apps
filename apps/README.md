@@ -1,31 +1,30 @@
-# The applications
+# The application
 
-We provide application examples in the following programming languages:
+The application is a simple command line interface written in the following
+programming languages:
 
- - Python
- - Golang
- - Java
+- :end: Python   
+- :on: Golang   
+- :soon: Java     
 
+Its goal is to provide the same behaviour across all the examples and so all the
+CLIs will have same commands, flags and outcomes.
 
-# Applications commands
+All the applications use the driver *cx_Oracle* provided by Oracle to interact
+with the database and all of them will initialize a single connection as long as
+the applicaton lives.
 
-All applications behave in the same way and all of them are CLI applications
-with the same commands. Their purpose is to show how the *cx_Oracle* driver
-can be used in different programming languages to achieve the **HA**.
+## The CLI commands
 
+The full list of commands can be retrieved by accessing the help menu of the
+CLI:
 
-## The interactive prompt
+    oracle-ha --help
 
-A interactive prompt to send command to the service manually can be started with
-the *human* command:
+which will return the following:
 
-    oracle-ha human --help
-
-
-## The automatic interface
-
-All the other commands are job to fire:
-
-    oracle-ha insert --help
-    oracle-ha update --help
-    oracle-ha delete --help
+- **cleanup**: Update records within the database;
+- **config**: Update sections of the TOML configuration file;
+- **injest**: Insert new records within the table;
+- **remove**: Delete records from the table;
+- **reset**: Reset database data to factory.

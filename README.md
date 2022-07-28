@@ -1,29 +1,37 @@
-# Oracle High Availability (oracle-ha)
+# Oracle Transparent Application Continuity (oracle-tac)
 
-In general:
+End users get frustrated with unreachable or inconsistent data and this
+can also be very disappointing for developers and DBAs who must ensure
+relaible services always ready to return information; the **Oracle High
+Availability (HA)** helps to garantiee a service is always up-and-running.
+
+As a general description:
 
 > Availability is the degree to which an application and database service is
 > available[^1]
 
-All users want their systems always relaible and ready to return information
-and this can be achieved only with the **Hight Availability (HA)**.
+Oracle provides a wide range of features to cover all the possible use cases in
+order to achive the HA; one of the most important is the **Transparent
+Application Continuity (TAC)**. TAC can recover database session after
+recoverable outages, with no need for DBA to have any knowledge of the
+application and with no need for developers to make application code changes.
 
-# Project history
+The aim of this project is to demonstrate how TAC can be accomplished with
+different programming languages.
 
-We created this project to show how the HA can impact client applications
-connected to Oracle databases.
+All the code examples you'll find in this repo use the **cx-Oracle** driver to
+connect to Oracle database. All the guidelines and how-to are provided for all
+of them.
 
-This project wants to show the same code, but in different programming
-languages, taking advantage of the HA by using the **Oracle CX** driver.
 
-## The structure
+## The project structure
 
-Under the folder **examples** there are dimonstrative applications grouped by
-programming language.
+The project is split into two parts:
 
-Folder **orchestration** gives you the possibility to set up a working remote
-environment with Ansible[^2].
+ - **apps**: folder with example applications in different programming
+   languages;
+ - **orchestrate**: the IT automantion tool to deploy all or some of the
+   applications on the remotes you want.
 
 
 [^1]: https://docs.oracle.com/en/database/oracle/oracle-database/19/haovw/overview-of-ha.html
-[^2]: https://www.ansible.com/
