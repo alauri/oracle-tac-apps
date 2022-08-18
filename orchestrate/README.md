@@ -1,7 +1,7 @@
 # Automate service and app configuration
 
-The *orchestrate* folder provides a quick way to setup pre-existing remote
-machines to make them able run all the demonstrative applications.
+The *orchestrate* folder provides a quick way to setup remote machines to run
+the application in different programming languages.
 
 
 ## Requirements
@@ -11,8 +11,8 @@ This orchestration tool has been developed with Ansible[^1].
 
 ## Configure
 
-At the moment the only available configuration is on a single remote for both
-database service and/or application(s).
+At the moment we can only support the configuration for the OracleLinux
+Operating System.
 
 Within the file *inventory*, or whatever filename you like, put the IP of the
 remote machine you want to configure under the section **remotes**:
@@ -41,17 +41,15 @@ configure by using the ansible tags[^2]:
     ansible-playbook -i <inventory-filename> site.yml --tags py
 
 
-## Supported Operating System
-
-At the moment, the only supported operating system is **OracleLinux**.
-
-
 ## Never executed tasks
 
 The project is planned to support multiple programming languages as
-demonstrative applications as well as a full setup of the database service, even
-though some of the are not ready yet and then marked with the Ansible flag
-**never** to avoid their automatic execution.
+demonstrative applications. Right now only the Python version of the project is
+completed and so only the its configuration is available.
+
+Other programming languages are already planned to configured, such as GoLang
+and Java, but at the moment are marked with the Ansible flag **never** to avoid
+their automatic execution.
 
 
 [^1]: https://docs.ansible.com/ansible/latest/installation_guide/index.html

@@ -1,6 +1,10 @@
 ---
 
 # Configure all supported programming languages
+- hosts: os_OracleLinux
+  roles:
+    - role: oraclelinux
+
 - hosts: remotes
   roles:
     - role: app
