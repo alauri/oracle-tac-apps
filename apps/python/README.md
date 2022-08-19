@@ -21,7 +21,7 @@ To run unit tests with PyTest[^3]:
     $ pytest
 
 
-# Use the new driver version
+# New driver release
 
 In May 2022 a new version of the driver has been released. As explained in the
 release note[^4], this is a library renamed, major version successor of the old
