@@ -17,7 +17,7 @@ import cx_Oracle
 
 from oha.cmd import (
     remove,
-    injest,
+    ingest,
     cleanup,
     reset
 )
@@ -155,6 +155,6 @@ def _on_close(ctx) -> None:
 
 # Register commands
 cli.add_command(remove)
-cli.add_command(injest)
+cli.add_command(ingest)
 cli.add_command(cleanup)
 cli.add_command(reset)

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""Command ``injest`` is used store new records within the db.
+"""Command ``ingest`` is used store new records within the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -29,17 +29,17 @@ import cx_Oracle
               default=1,
               help='after how many operations perform a commit')
 @click.pass_context
-def injest(ctx,
+def ingest(ctx,
            iters: int,
            delay: float,
            commit_every: int) -> None:
     """Insert new records within the table"""
 
     # Set connection attriutes
-    ctx.obj.conn.module = "oha.cmd.injest"
+    ctx.obj.conn.module = "oha.cmd.ingest"
 
     # Define query parameters
-    data = open(ctx.obj.conf["injest"]["dumpfile"]).readlines()
+    data = open(ctx.obj.conf["ingest"]["dumpfile"]).readlines()
     try:
         for step, line in enumerate(data[:iters]):
             step += 1
