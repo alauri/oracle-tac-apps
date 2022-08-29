@@ -9,8 +9,8 @@ from oha import cli
 import json
 
 
-def test_cli(runner, static) -> None:
-    """Invoke the CLI by asking information about the configuration.
+def test_usage(runner, static) -> None:
+    """Invoke the CLI with no commands and see how it works.
 
     Returns:
         Nothing
@@ -20,7 +20,20 @@ def test_cli(runner, static) -> None:
     assert result.output.startswith("Usage: ")
 
 
-def test_cli_error(runner, static) -> None:
+def test_config(runner, static) -> None:
+    """Invoke the CLI by asking information about the current configuration.
+
+    Returns:
+        Nothing
+    """
+    result = runner.invoke(cli.cli, ["-w", static, "--config"])
+
+    assert result.exit_code == 0
+    assert result.output.startswith("{")
+    assert "Usage:" not in result.output
+
+
+def test_error(runner, static) -> None:
     """Invoke the CLI with a wrong dsn value.
 
     Returns:

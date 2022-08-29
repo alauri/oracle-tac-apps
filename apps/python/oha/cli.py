@@ -6,6 +6,7 @@
 
 from typing import Dict
 
+import pprint
 import os
 
 import click
@@ -15,7 +16,6 @@ import toml
 import cx_Oracle
 
 from oha.cmd import (
-    config,
     remove,
     injest,
     cleanup,
@@ -55,12 +55,16 @@ class OracleTAC:
               type=str,
               default=os.path.join(os.path.dirname(__file__), "../.."),
               help="The absolute path of the working folder")
+@click.option("--config/--no-config",
+              type=bool,
+              default=False,
+              help="Show the current configuration")
 @click.option("-d", "--dsn",
               type=click.IntRange(min=1, max=6),
               default=1,
               help="The connection string to use")
 @click.pass_context
-def cli(ctx, workdir: str, dsn: int) -> None:
+def cli(ctx, workdir: str, config: bool, dsn: int) -> None:
     """Oracle High Availability CLI in Python"""
 
     # Define teardown callbacks
@@ -68,6 +72,12 @@ def cli(ctx, workdir: str, dsn: int) -> None:
 
     # Read the configuration file
     tomlfile = toml.load(os.path.join(os.path.abspath(workdir), "config.toml"))
+
+    # Check the config flag. If it's True, show the current configuration and
+    # exit
+    if config:
+        pprint.pprint(tomlfile, indent=4)
+        ctx.exit(0)
 
     if ctx.invoked_subcommand is None:
         click.echo(cli.get_help(ctx))
@@ -145,7 +155,6 @@ def _on_close(ctx) -> None:
 
 
 # Register commands
-cli.add_command(config)
 cli.add_command(remove)
 cli.add_command(injest)
 cli.add_command(cleanup)
