@@ -16,7 +16,7 @@ dsn3 = "FAKE"
 tableraw = "raw_table"
 tablejson = "json_table"
 
-[injest]
+[ingest]
 dumpfile = "../raw.txt"
 
 [cleanup]

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-"""Tests for the module ``injest.py``"""
+"""Tests for the module ``ingest.py``"""
 
 
 from oha.cli import cli
@@ -10,7 +10,7 @@ from tests.factory import MockResponse
 
 
 def test_no_args(mocker, runner, static) -> None:
-    """Invoke the command ``injest`` with no options.
+    """Invoke the command ``ingest`` with no options.
 
     Returns:
         Nothing
@@ -20,7 +20,7 @@ def test_no_args(mocker, runner, static) -> None:
         ('server1', 'vm1'), (1, ), (0, ),
     ])
     result = runner.invoke(cli, ["-w", static,
-                                 "injest"])
+                                 "ingest"])
 
     assert result.exit_code == 0
     assert "(2021,'Abu Dhabi','NaT|1|Car 1|Driver 1')" in result.output
@@ -29,7 +29,7 @@ def test_no_args(mocker, runner, static) -> None:
 
 
 def test_args(mocker, runner, static) -> None:
-    """Invoke the command ``injest`` with the options ``iters``.
+    """Invoke the command ``ingest`` with the options ``iters``.
 
     Returns:
         Nothing
@@ -39,7 +39,7 @@ def test_args(mocker, runner, static) -> None:
         ('server1', 'vm1'), (1, ), (0, ),
     ])
     result = runner.invoke(cli, ["-w", static,
-                                 "injest",
+                                 "ingest",
                                  "--iters", 5,
                                  "--delay", 0.05,
                                  "--commit-every", 5])

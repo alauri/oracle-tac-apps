@@ -45,7 +45,7 @@ dsn6 = "HR"
 tableraw = "raw_telemetry"
 tablejson = "json_telemetry"
 
-[injest]
+[ingest]
 dumpfile = "../raw.txt"
 
 [cleanup]
