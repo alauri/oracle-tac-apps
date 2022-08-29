@@ -97,13 +97,12 @@ def cli(ctx, workdir: str, config: bool, dsn: int) -> None:
         headraw = ctx.obj.cur.execute(query).fetchone()
         headraw = 0 if headraw is None else int(headraw[0])
 
-        # Retrieve the ID of the first row from the json table
+        # Retrieve how many rows are in the clean table
         query = f"SELECT COUNT(*) " \
                 f"FROM {ctx.obj.conf['database']['tablejson']}"
         tail = ctx.obj.cur.execute(query).fetchone()[0]
         tail += headraw
 
-        ctx.obj.conf["injest"]["head"] = headraw
         ctx.obj.conf["cleanup"]["tail"] = tail
     except cx_Oracle.DatabaseError as err:
         click.echo(err)

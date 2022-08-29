@@ -49,3 +49,4 @@ tablejson = "json_telemetry"
 dumpfile = "../raw.txt"
 
 [cleanup]
+# This section is empty because filled at run-time
