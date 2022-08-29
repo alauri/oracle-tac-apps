@@ -42,8 +42,8 @@ dsn5 = """(DESCRIPTION = \
 dsn6 = "HR"
 
 # Database schema
-tableraw = "raw_telemetry"
-tablejson = "json_telemetry"
+tableraw = "raw_tel"
+tablejson = "json_tel"
 
 [ingest]
 dumpfile = "../raw.txt"
