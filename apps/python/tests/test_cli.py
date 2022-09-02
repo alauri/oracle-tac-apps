@@ -39,10 +39,10 @@ def test_ping(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static, "--ping"])
+    result = runner.invoke(cli.cli, ["-w", static, '-d', 1, "--ping"])
 
     assert result.exit_code == 0
-    assert "Database reachable" in result.output
+    assert "[+] - Database reachable" in result.output
 
 
 def test_error(runner, static) -> None:
