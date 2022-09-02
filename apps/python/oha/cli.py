@@ -59,12 +59,16 @@ class OracleTAC:
               type=bool,
               default=False,
               help="Show the current configuration")
+@click.option("--ping/--no-ping",
+              type=bool,
+              default=False,
+              help="Check database connection")
 @click.option("-d", "--dsn",
               type=click.IntRange(min=1, max=6),
-              default=1,
+              default=4,
               help="The connection string to use")
 @click.pass_context
-def cli(ctx, workdir: str, config: bool, dsn: int) -> None:
+def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
     """Oracle High Availability CLI in Python"""
 
     # Define teardown callbacks
@@ -79,17 +83,22 @@ def cli(ctx, workdir: str, config: bool, dsn: int) -> None:
         pprint.pprint(tomlfile, indent=4)
         ctx.exit(0)
 
-    if ctx.invoked_subcommand is None:
+    if ctx.invoked_subcommand is None and not ping:
         click.echo(cli.get_help(ctx))
+        ctx.exit(0)
+
+    # Initialize database connection and retrieve context info
+    ctx.obj = OracleTAC(tomlfile, workdir, dsn)
+    click.echo(f"[+] - {_get_db_info()}")
+
+    # Check the database is reachable
+    if ping:
+        _ = ctx.obj.conn.ping()
+        click.echo("[+] - Database reachable")
         ctx.exit(0)
 
     # Initialize Click context with TOML configuration file
     try:
-        ctx.obj = OracleTAC(tomlfile, workdir, dsn)
-
-        # Print DB context info
-        click.echo(_get_db_info())
-
         # Retrieve the ID of the first row from the raw table
         query = f"SELECT id " \
                 f"FROM {ctx.obj.conf['database']['tableraw']} " \
@@ -144,7 +153,7 @@ def _on_close(ctx) -> None:
 
     try:
         # Print DB context info
-        click.echo(_get_db_info())
+        click.echo(f"[+] - {_get_db_info()}")
 
         # Close the cursor
         ctx.obj.cur.close()

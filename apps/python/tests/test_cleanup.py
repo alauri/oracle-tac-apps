@@ -20,7 +20,7 @@ def test_no_args(mocker, runner, static) -> None:
         (1,2021,'Abu Dhabi','NaT|1|Car 1|Driver 1'),
         ('server1', 'vm1'), (1, ), (0, ),
     ])
-    result = runner.invoke(cli, ["-w", static, 'cleanup'])
+    result = runner.invoke(cli, ["-w", static, '-d', 1, 'cleanup'])
 
     assert result.exit_code == 0
     assert ",'NaT',1,'Car 1','Driver 1')" in result.output
@@ -40,7 +40,7 @@ def test_args(mocker, runner, static) -> None:
         (5,2021,'Abu Dhabi','0 days 00:01:28.718000|5|Car 1|Driver 1'),
         ('server1', 'vm1'), (1, ), (0, ),
     ])
-    result = runner.invoke(cli, ["-w", static, 'cleanup',
+    result = runner.invoke(cli, ["-w", static, '-d', 1, 'cleanup',
                                  "--iters", 5,
                                  "--delay", 0.05,
                                  "--commit-every", 2
