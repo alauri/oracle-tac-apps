@@ -21,26 +21,26 @@ def reset(ctx) -> None:
         # Truncate table raw
         query = f"TRUNCATE TABLE {tableraw}"
         ctx.obj.cur.execute(query)
-        click.echo(f"[ALTERING] - {query}")
+        click.echo(f"[+] - {query}")
 
         # Alter identity column for table raw
         query = f"ALTER TABLE {tableraw} " \
                 f"MODIFY(ID GENERATED AS IDENTITY (START WITH 1))"
         ctx.obj.cur.execute(query)
-        click.echo(f"[ALTERING] - {query}")
+        click.echo(f"[+] - {query}")
 
         # Truncate table json
         query = f"TRUNCATE TABLE {tablejson}"
         ctx.obj.cur.execute(query)
-        click.echo(f"[ALTERING] - {query}")
+        click.echo(f"[+] - {query}")
 
         # Alter identity column for table json
         query = f"ALTER TABLE {tablejson} " \
                 f"MODIFY(ID GENERATED AS IDENTITY (START WITH 1))"
         ctx.obj.cur.execute(query)
-        click.echo(f"[ALTERING] - {query}")
+        click.echo(f"[+] - {query}")
     except cx_Oracle.DatabaseError as err:
         click.echo(err)
         ctx.exit(1)
 
-    click.echo("[ALTERING] - All tables have been altered.")
+    click.echo("[+] - All tables have been altered.")

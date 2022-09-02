@@ -65,7 +65,7 @@ class OracleTAC:
               help="Check database connection")
 @click.option("-d", "--dsn",
               type=click.IntRange(min=1, max=6),
-              default=1,
+              default=4,
               help="The connection string to use")
 @click.pass_context
 def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
@@ -89,12 +89,12 @@ def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
 
     # Initialize database connection and retrieve context info
     ctx.obj = OracleTAC(tomlfile, workdir, dsn)
-    click.echo(_get_db_info())
+    click.echo(f"[+] - {_get_db_info()}")
 
     # Check the database is reachable
     if ping:
         _ = ctx.obj.conn.ping()
-        click.echo("Database reachable")
+        click.echo("[+] - Database reachable")
         ctx.exit(0)
 
     # Initialize Click context with TOML configuration file
@@ -153,7 +153,7 @@ def _on_close(ctx) -> None:
 
     try:
         # Print DB context info
-        click.echo(_get_db_info())
+        click.echo(f"[+] - {_get_db_info()}")
 
         # Close the cursor
         ctx.obj.cur.close()
