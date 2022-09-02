@@ -29,3 +29,6 @@ class MockOracle:
 
     def commit(self, *args, **kwargs):
         return MockCursor()
+
+    def ping(self, *args, **kwargs):
+        return None

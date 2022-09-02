@@ -33,6 +33,18 @@ def test_config(runner, static) -> None:
     assert "Usage:" not in result.output
 
 
+def test_ping(runner, static) -> None:
+    """Invoke the CLI and check the connection to the database.
+
+    Returns:
+        Nothing
+    """
+    result = runner.invoke(cli.cli, ["-w", static, '-d', 1, "--ping"])
+
+    assert result.exit_code == 0
+    assert "[+] - Database reachable" in result.output
+
+
 def test_error(runner, static) -> None:
     """Invoke the CLI with a wrong dsn value.
 
