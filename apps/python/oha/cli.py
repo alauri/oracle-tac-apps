@@ -64,8 +64,8 @@ class OracleTAC:
               default=False,
               help="Check database connection")
 @click.option("-d", "--dsn",
-              type=click.IntRange(min=1, max=6),
-              default=4,
+              type=int,
+              default=1,
               help="The connection string to use")
 @click.pass_context
 def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
@@ -76,6 +76,10 @@ def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
 
     # Read the configuration file
     tomlfile = toml.load(os.path.join(os.path.abspath(workdir), "config.toml"))
+
+    # Check the given DSN
+    if f"dsn{dsn}" not in tomlfile["database"]:
+        raise click.UsageError("Invalid value for '-d/--dsn'")
 
     # Check the config flag. If it's True, show the current configuration and
     # exit

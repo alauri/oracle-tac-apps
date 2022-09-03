@@ -51,6 +51,6 @@ def test_error(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static, "-d", 0])
+    result = runner.invoke(cli.cli, ["-w", static, "-d", 0, "ingest"])
     assert result.exit_code == 2
-    assert "Invalid value for '-d'" in result.output
+    assert "Invalid value for '-d/--dsn'" in result.output
