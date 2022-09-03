@@ -3,32 +3,15 @@
 username = "sbuemi"
 password = "sbuemi"
 
+# Database schema
+tableraw = "raw_tel"
+tablejson = "json_tel"
+
+[dsn]
 # Connection strings
-dsn1 = "localhost:1521/PDB"
-dsn2 = "localhost:1521/mygoodappsvc"
-dsn3 = """(DESCRIPTION = \
-        (CONNECT_TIMEOUT=120)(RETRY_COUNT=30) \
-        (RETRY_DELAY=3)(TRANSPORT_CONNECT_TIMEOUT=3) \
-        (ADDRESS_LIST = \
-        (LOAD_BALANCE=on) \
-        (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb01)(PORT=1521))) \
-        (ADDRESS_LIST = \
-        (LOAD_BALANCE=on) \
-        (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
-        (CONNECT_DATA=(SERVICE_NAME = PDB))) \
-"""
-dsn4 = """(DESCRIPTION = \
-        (CONNECT_TIMEOUT=120)(RETRY_COUNT=30) \
-        (RETRY_DELAY=3)(TRANSPORT_CONNECT_TIMEOUT=3) \
-        (ADDRESS_LIST = \
-        (LOAD_BALANCE=on) \
-        (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb01)(PORT=1521))) \
-        (ADDRESS_LIST = \
-        (LOAD_BALANCE=on) \
-        (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
-        (CONNECT_DATA=(SERVICE_NAME = mygoodappsvc))) \
-"""
-dsn5 = """(DESCRIPTION = \
+localhost = "localhost:1521:PDB"
+default = "vmdb01/PDB"
+ac = """(DESCRIPTION = \
         (CONNECT_TIMEOUT=120)(RETRY_COUNT=30) \
         (RETRY_DELAY=3)(TRANSPORT_CONNECT_TIMEOUT=3) \
         (ADDRESS_LIST = \
@@ -39,11 +22,17 @@ dsn5 = """(DESCRIPTION = \
         (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
         (CONNECT_DATA=(SERVICE_NAME = myacappsvc))) \
 """
-dsn6 = "HR"
-
-# Database schema
-tableraw = "raw_tel"
-tablejson = "json_tel"
+tac = """(DESCRIPTION = \
+         (CONNECT_TIMEOUT=120)(RETRY_COUNT=30) \
+         (RETRY_DELAY=3)(TRANSPORT_CONNECT_TIMEOUT=3) \
+         (ADDRESS_LIST = \
+         (LOAD_BALANCE=on) \
+         (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb01)(PORT=1521))) \
+         (ADDRESS_LIST = \
+         (LOAD_BALANCE=on) \
+         (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
+         (CONNECT_DATA=(SERVICE_NAME = mygoodappsvc))) \
+"""
 
 [ingest]
 dumpfile = "../raw.txt"

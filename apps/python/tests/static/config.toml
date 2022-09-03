@@ -3,18 +3,19 @@
 username = "test"
 password = "test"
 
-# Connection strings
-dsn1 = "localhost:0000/fake"
-dsn2 = """Lorem ipsum dolor sit amet, \
-        consectetur adipiscing elit, \
-        sed do eiusmod tempor incididunt ut \
-        labore et dolore magna aliqua.
-"""
-dsn3 = "FAKE"
-
 # Database schema
-tableraw = "raw_table"
-tablejson = "json_table"
+tableraw = "raw_tel"
+tablejson = "json_tel"
+
+[dsn]
+# Connection strings
+localhost = "localhost:0000/fake"
+lorem = """Lorem ipsum dolor sit amet, \
+           consectetur adipiscing elit, \
+           sed do eiusmod tempor incididunt ut \
+           labore et dolore magna aliqua.
+"""
+fake = "FAKE"
 
 [ingest]
 dumpfile = "../raw.txt"

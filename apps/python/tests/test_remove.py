@@ -19,7 +19,7 @@ def test_no_args(mocker, runner, static) -> None:
         ('server1', 'vm1'), (1, ), (0, ),
         ('server1', 'vm1'), (1, ), (0, ),
     ])
-    result = runner.invoke(cli, ["-w", static, '-d', 1,
+    result = runner.invoke(cli, ["-w", static, '-d', 'localhost',
                                  "remove",
                                  "--delay", 0.05])
 
@@ -39,7 +39,7 @@ def test_iters(mocker, runner, static) -> None:
         ('server1', 'vm1'), (1, ), (0, ),
         ('server1', 'vm1'), (1, ), (0, ),
     ])
-    result = runner.invoke(cli, ["-w", static, '-d', 1, 'remove',
+    result = runner.invoke(cli, ["-w", static, '-d', 'localhost', 'remove',
                                  "--iters", 5,
                                  "--delay", 0.05,
                                  "--commit-every", 2

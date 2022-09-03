@@ -43,7 +43,7 @@ class OracleTAC:
         self.conn = cx_Oracle.connect(
             user=self.conf["database"]["username"],
             password=self.conf["database"]["password"],
-            dsn=self.conf["database"][f"dsn{connstr}"])
+            dsn=self.conf["dsn"][connstr])
         self.conn.client_identifier = "py-app"
 
         # Get the cursor
@@ -64,8 +64,8 @@ class OracleTAC:
               default=False,
               help="Check database connection")
 @click.option("-d", "--dsn",
-              type=int,
-              default=1,
+              type=str,
+              default="localhost",
               help="The connection string to use")
 @click.pass_context
 def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
@@ -78,7 +78,7 @@ def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
     tomlfile = toml.load(os.path.join(os.path.abspath(workdir), "config.toml"))
 
     # Check the given DSN
-    if f"dsn{dsn}" not in tomlfile["database"]:
+    if dsn not in tomlfile["dsn"]:
         raise click.UsageError("Invalid value for '-d/--dsn'")
 
     # Check the config flag. If it's True, show the current configuration and
