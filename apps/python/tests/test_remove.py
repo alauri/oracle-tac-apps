@@ -24,7 +24,7 @@ def test_no_args(mocker, runner, static) -> None:
                                  "--delay", 0.05])
 
     assert result.exit_code == 0
-    assert result.output.count("FROM json_table WHERE LapTime='NaT'") == 1
+    assert result.output.count("FROM json_tel WHERE LapTime='NaT'") == 1
     assert result.output.count("COMMIT") == 1
     assert result.output.count("('server1', 'vm1')") == 2
 
@@ -46,6 +46,6 @@ def test_iters(mocker, runner, static) -> None:
                                  ])
 
     assert result.exit_code == 0
-    assert result.output.count("FROM json_table WHERE LapTime='NaT'") == 5
+    assert result.output.count("FROM json_tel WHERE LapTime='NaT'") == 5
     assert result.output.count("COMMIT") == 3
     assert result.output.count("('server1', 'vm1')") == 2
