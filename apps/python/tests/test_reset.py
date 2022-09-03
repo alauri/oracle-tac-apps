@@ -19,7 +19,7 @@ def test_no_args(mocker, runner, static) -> None:
         ('server1', 'vm1'), (1, ), (0, ),
         ('server1', 'vm1'), (1, ), (0, ),
     ])
-    result = runner.invoke(cli, ["-w", static, '-d', 1, 'reset'])
+    result = runner.invoke(cli, ["-w", static, '-d', 'localhost', 'reset'])
 
     assert result.exit_code == 0
     assert result.output.count("('server1', 'vm1')") == 2

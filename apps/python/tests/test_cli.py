@@ -39,7 +39,7 @@ def test_ping(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static, '-d', 1, "--ping"])
+    result = runner.invoke(cli.cli, ["-w", static, '-d', 'localhost', '--ping'])
 
     assert result.exit_code == 0
     assert "[+] - Database reachable" in result.output
@@ -51,6 +51,6 @@ def test_error(runner, static) -> None:
     Returns:
         Nothing
     """
-    result = runner.invoke(cli.cli, ["-w", static, "-d", 0, "ingest"])
+    result = runner.invoke(cli.cli, ["-w", static, "-d", 'wrong', "ingest"])
     assert result.exit_code == 2
     assert "Invalid value for '-d/--dsn'" in result.output
