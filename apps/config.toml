@@ -10,7 +10,7 @@ tablejson = "json_tel"
 [dsn]
 # Connection strings
 localhost = "localhost:1521:PDB"
-default = "vmdb01/PDB"
+default = "vmdb01:1521/PDB"
 ac = """(DESCRIPTION = \
         (CONNECT_TIMEOUT=120)(RETRY_COUNT=30) \
         (RETRY_DELAY=3)(TRANSPORT_CONNECT_TIMEOUT=3) \
