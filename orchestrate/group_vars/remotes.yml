@@ -1,8 +1,5 @@
 ---
 
-# MANDATORY VARIABLES SECTION
-#
-# Ansible user and root credentials
-ansible_user:
-ansible_password:
-ansible_become_pass:
+# Ansible vars for the project
+prjdir: "{{ lookup('env', 'PWD') }}/../"
+rmtdir: ~/workspace

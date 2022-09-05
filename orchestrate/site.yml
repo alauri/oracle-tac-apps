@@ -1,7 +1,7 @@
 ---
 
 - name: Parse all the remotes to gather information from them
-  hosts: remotes
+  hosts: localhost,remotes
   tasks:
     - name: Classify hosts depending on their OS distribution
       group_by:

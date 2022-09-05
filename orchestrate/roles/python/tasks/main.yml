@@ -22,33 +22,13 @@
   ansible.builtin.shell:
     cmd:  ~/.pyenv/libexec/pyenv install 3.10.5 && ~/.pyenv/libexec/pyenv local 3.10.5
 
-- name: Download Poetry
-  ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
-    dest: /tmp/get-poetry.py
-    mode: '0664'
-
 - name: Install Poetry
-  command: python3 /tmp/get-poetry.py -y
-
-- name: Create a directory if it does not exist
-  ansible.builtin.file:
-    path: ~/workspace/applications/py/
-    state: directory
-    owner: oracle
-    mode: '0755'
-
-- name: Copy the whole Python application example
-  ansible.builtin.copy:
-    src: ../../../../apps/python/
-    dest: ~/workspace/applications/py/
-    owner: oracle
-    group: oracle
-    mode: '0644'
+  ansible.builtin.shell:
+    cmd: curl -sSL https://install.python-poetry.org | python3 -
 
 - name: Enable poetry and install dependencies
   ansible.builtin.shell:
-    chdir: ~/workspace/applications/py/
+    chdir: "{{ rmtdir }}/oracle-tac-apps/apps/python/"
     cmd: . ~/.bash_profile && poetry install
 
 - name: Delete Poetry installation script

@@ -1,55 +1,61 @@
-# Automate service and app configuration
+# Automation tool to setup client environment
 
-The *orchestrate* folder provides a quick way to setup remote machines to run
-the application in different programming languages.
+In this folder you can find an automation tool written in Ansible to setup both
+local and remote machines to run the application.
+
+Right now, only the **Python** version of the application and the
+**OracleLinux** operating system are supported; other languages and OS will be
+aded soon.
 
 
 ## Requirements
 
-This orchestration tool has been developed with Ansible[^1].
+- Ansible[^1]
 
 
-## Configure
+## Configuration
 
-At the moment we can only support the configuration for the OracleLinux
-Operating System.
+Both local and remote machines can be setup with this tool.
 
-Within the file *inventory*, or whatever filename you like, put the IP of the
-remote machine you want to configure under the section **remotes**:
+For local runs just the become password must be provided alongside some vars
+for internal references:
+
+    ansible-playbook site.yml \
+        --ask-become-pass \
+        --extra-vars "@group_vars/commons.yml"
+
+To runs the Ansible playbook against remote machines, an inventory file with a
+few additional vars must be created. Within the *inventory* file or whatever
+other you name you prefer, define the section **remotes** and fill it with
+target machines' information, like below:
 
     [remotes]
-    192.168.100.101
+    192.168.100.101 ansible_user=<username> ansible_password=<userpass>
+    192.168.100.102 ansible_user=<username> ansible_password=<userpass>
+    ...
 
-Some tasks also requires administrative permissions, that you can fill-up in the
-file **group_vars/remots.yml**.
+To run the playbook, just use:
 
-
-## Execution
-
-Test your connection with ansible ad-hoc commands and run the entire playbook:
-
-    ansible all -i <inventory-filename> -m ping
-    ansible-playbook -i <inventory-filename> site.yml
+    ansible-playbook site.yml \
+        -i <inventory-filename> \
+        --ask-become-pass \
+        --limit remotes
 
 
 ### Select tags
 
-It's also possible to select only one or some of the application examples to
-configure by using the ansible tags[^2]:
+Ansible tags are also available:
 
-    ansible-playbook -i <inventory-filename> --list-tags
-    ansible-playbook -i <inventory-filename> site.yml --tags py
+    ansible-playbook site.yml --list-tags
 
 
 ## Never executed tasks
 
-The project is planned to support multiple programming languages as
-demonstrative applications. Right now only the Python version of the project is
-completed and so only the its configuration is available.
+As just said, only some programming languages as well as operating systems are
+supported right now.
 
-Other programming languages are already planned to configured, such as GoLang
-and Java, but at the moment are marked with the Ansible flag **never** to avoid
-their automatic execution.
+All the future tasks, like the programming languages **GoLang** and **Java**,
+are temporarly *never* executed.
 
 
 [^1]: https://docs.ansible.com/ansible/latest/installation_guide/index.html

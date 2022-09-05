@@ -5,9 +5,14 @@
   roles:
     - role: oraclelinux
 
+# Copy the project to remotes if needed
 - hosts: remotes
   roles:
     - role: app
+
+# Configure all the programming languages
+- hosts: localhost,remotes
+  roles:
     - role: python
       tags: py
     - role: java
