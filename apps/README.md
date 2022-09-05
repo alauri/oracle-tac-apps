@@ -1,14 +1,15 @@
 # The application
 
-The application is a simple command line interface written in the following
+The application is a simple Command Line Interface written in the following
 programming languages:
 
-- :end: Python   
-- :on: Golang   
-- :soon: Java     
+- :end: Python
+- :on: Golang
+- :soon: Java
 
-The goal is to demonstrate that by using the driver provided by Oracle is
-possible to ensure the same behaviour in different programming languages.
+We provide different implementations for this application to demonstrate that
+the *Transparent Application Continuity* in Oracle databases can be achieved in
+several programming languages.
 
 
 ## The CLI commands

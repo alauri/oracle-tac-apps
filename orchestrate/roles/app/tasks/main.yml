@@ -1,10 +1,19 @@
-- name: Copy the basic configuration file for all the app examples
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ rmtdir }}"
+    state: directory
+    owner: oracle
+    mode: '0755'
+
+- name: Copy the project to remotes
   ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: ~/workspace/applications/
+    src: "{{ prjdir }}/{{ item }}"
+    dest: "{{ rmtdir }}/oracle-tac-apps/"
     owner: oracle
     group: oracle
     mode: '0644'
   with_items:
-     - ../../../../apps/config.toml
-     - ../../../../apps/raw.txt
+     - "orchestrate"
+     - "apps"
+     - "LICENSE"
+     - "README.md"

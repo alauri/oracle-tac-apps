@@ -1,6 +1,7 @@
 # The Python application
 
-The Python version of the application using the driver **cx_Oracle**[^1].
+The Python version of the application uses the driver **cx_Oracle**[^1] to
+connect to the Oracle database.
 
 
 # Installation and first execution
@@ -27,7 +28,7 @@ In May 2022 a new version of the driver has been released. As explained in the
 release note[^4], this is a library renamed, major version successor of the old
 driver.
 
-Support to the new version of the driver will be added asap.
+Support to the new version of the driver will be added soon.
 
 
 [^1]: https://oracle.github.io/python-cx_Oracle/
