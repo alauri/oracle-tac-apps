@@ -6,7 +6,7 @@ authors = ["Andrea Lauri <andrea.lauri86@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-    { include = "oha" },
+    { include = "otac" },
 ]
 classifiers = [
     "Programming Language :: Python :: 3.10",
@@ -25,7 +25,7 @@ pytest = "^7.1.2"
 pytest-mock = "^3.7.0"
 
 [tool.poetry.scripts]
-oracle-tac-py = "oha.__main__:main"
+oracle-tac-py = "otac.__main__:main"
 
 [tool.pytest.ini_options]
 minversion = "6.0"

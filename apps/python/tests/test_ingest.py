@@ -4,7 +4,7 @@
 """Tests for the module ``ingest.py``"""
 
 
-from oha.cli import cli
+from otac.cli import cli
 
 from tests.factory import MockResponse
 

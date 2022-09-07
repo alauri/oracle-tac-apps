@@ -15,7 +15,7 @@ import toml
 
 import cx_Oracle
 
-from oha.cmd import (
+from otac.cmd import (
     remove,
     ingest,
     cleanup,
@@ -98,7 +98,7 @@ def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
     click.echo(f"[+] - {_get_db_info()}")
 
     # Instrumentation: Set up current module (ACCHK_REPORT)
-    ctx.obj.conn.module = "oha.cli"
+    ctx.obj.conn.module = "otac.cli"
 
     # Check the database is reachable
     if ping:

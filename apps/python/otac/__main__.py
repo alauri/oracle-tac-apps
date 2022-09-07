@@ -5,7 +5,7 @@
 """Entry point of the Python application"""
 
 
-from oha import cli
+from otac import cli
 
 
 def main() -> None:
