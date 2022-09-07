@@ -4,9 +4,7 @@
 """E2E test suite for the main command"""
 
 
-from oha import cli
-
-import json
+from otac import cli
 
 
 def test_usage(runner, static) -> None:

@@ -41,7 +41,7 @@ def cleanup(ctx,
     """Update records within the database"""
 
     # Instrumentation: Set up current module (ACCHK_REPORT)
-    ctx.obj.conn.module = "oha.cmd.cleanup"
+    ctx.obj.conn.module = "otac.cmd.cleanup"
 
     # Get the first id to read from the table raw
     tail = ctx.obj.conf['cleanup']['tail']

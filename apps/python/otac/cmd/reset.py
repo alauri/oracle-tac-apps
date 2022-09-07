@@ -15,7 +15,7 @@ def reset(ctx) -> None:
     """Reset database data to factory"""
 
     # Instrumentation: Set up current module (ACCHK_REPORT)
-    ctx.obj.conn.module = "oha.cmd.reset"
+    ctx.obj.conn.module = "otac.cmd.reset"
 
     tableraw = ctx.obj.conf['database']['tableraw']
     tablejson = ctx.obj.conf['database']['tablejson']
