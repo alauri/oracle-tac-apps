@@ -40,6 +40,9 @@ def remove(ctx,
            delay: float,
            commit_every: int) -> None:
     """Delete records from the table"""
+
+    # Instrumentation: Set up current module (ACCHK_REPORT)
+    ctx.obj.conn.module = "oha.cmd.remove"
  
     # Define query parameters
     table = ctx.obj.conf["database"]["tablejson"]
@@ -48,7 +51,8 @@ def remove(ctx,
     step = 1
     try:
         while loop or step <= iters:
-            # Prepare query with updated conditions
+            # Instrumentation: Set up module action (ACCHK_REPORT)
+            ctx.obj.conn.action = "DELETE.useless.data"
             query = f"DELETE FROM {table} WHERE LapTime='NaT'"
 
             # Execute query
@@ -57,6 +61,8 @@ def remove(ctx,
 
             # Commit changes
             if step % commit_every == 0:
+                # Instrumentation: Set up module action (ACCHK_REPORT)
+                ctx.obj.conn.action = "COMMIT.remove.data"
                 ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
@@ -65,6 +71,8 @@ def remove(ctx,
 
         # Check the last commit
         if iters % commit_every != 0:
+            # Instrumentation: Set up module action (ACCHK_REPORT)
+            ctx.obj.conn.action = "COMMIT.remove.data"
             ctx.obj.conn.commit()
             click.echo(f"[{iters}/{iters}] - COMMIT")
     except cx_Oracle.DatabaseError as err:

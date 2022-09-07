@@ -25,12 +25,12 @@ from oha.cmd import (
 
 class OracleTAC:
 
-    def __init__(self, tomlfile: Dict, workdir: str, dsn: int):
+    def __init__(self, tomlfile: Dict, workdir: str, dsn: str):
         self.workdir = workdir
         self.conf = tomlfile
         self.database(dsn)
 
-    def database(self, connstr: int) -> None:
+    def database(self, connstr: str) -> None:
         """Initialize the Oracle database.
 
         Args:
@@ -44,7 +44,9 @@ class OracleTAC:
             user=self.conf["database"]["username"],
             password=self.conf["database"]["password"],
             dsn=self.conf["dsn"][connstr])
-        self.conn.client_identifier = "py-app"
+
+        # Instrumentation: Set up the client identifier (ACCHK_REPORT)
+        self.conn.client_identifier = "oracle.tac.py"
 
         # Get the cursor
         self.cur = self.conn.cursor()
@@ -95,6 +97,9 @@ def cli(ctx, workdir: str, config: bool, ping: bool, dsn: int) -> None:
     ctx.obj = OracleTAC(tomlfile, workdir, dsn)
     click.echo(f"[+] - {_get_db_info()}")
 
+    # Instrumentation: Set up current module (ACCHK_REPORT)
+    ctx.obj.conn.module = "oha.cli"
+
     # Check the database is reachable
     if ping:
         _ = ctx.obj.conn.ping()
@@ -132,9 +137,8 @@ def _get_db_info(ctx) -> str:
     Returns:
         DB context info.
     """
-    # Set connection attriutes
-    ctx.obj.conn.action = "SEL ctx"
-    ctx.obj.conn.module = "oha.cli"
+    # Instrumentation: Set up module action (ACCHK_REPORT)
+    ctx.obj.conn.action = "SELECT.system.context"
 
     query = "SELECT " \
             "SYS_CONTEXT('USERENV', 'DB_UNIQUE_NAME') AS DB_UNIQUE_NAME, " \

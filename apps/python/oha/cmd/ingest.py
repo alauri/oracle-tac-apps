@@ -35,7 +35,7 @@ def ingest(ctx,
            commit_every: int) -> None:
     """Insert new records within the table"""
 
-    # Set connection attriutes
+    # Instrumentation: Set up current module (ACCHK_REPORT)
     ctx.obj.conn.module = "oha.cmd.ingest"
 
     # Define query parameters
@@ -44,8 +44,8 @@ def ingest(ctx,
         for step, line in enumerate(data[:iters]):
             step += 1
 
-            # Prepare the query
-            ctx.obj.conn.action = "INS raw"
+            # Instrumentation: Set up module action (ACCHK_REPORT)
+            ctx.obj.conn.action = "INSERT.raw.data"
             query = f"INSERT INTO {ctx.obj.conf['database']['tableraw']}" \
                     f"(year,track,data) " \
                     f"VALUES({line.strip()})"
@@ -56,7 +56,8 @@ def ingest(ctx,
 
             # Commit changes
             if step % commit_every == 0:
-                ctx.obj.conn.action = "COM raw"
+                # Instrumentation: Set up module action (ACCHK_REPORT)
+                ctx.obj.conn.action = "COMMIT.raw.data"
                 ctx.obj.conn.commit()
                 click.echo(f"[{step}/{iters}] - COMMIT")
 
@@ -65,7 +66,8 @@ def ingest(ctx,
 
         # Check the last commit
         if iters % commit_every != 0:
-            ctx.obj.conn.action = "COM raw"
+            # Instrumentation: Set up module action (ACCHK_REPORT)
+            ctx.obj.conn.action = "COMMIT.raw.data"
             ctx.obj.conn.commit()
             click.echo(f"[{iters}/{iters}] - COMMIT")
     except cx_Oracle.DatabaseError as err:
@@ -77,6 +79,7 @@ def ingest(ctx,
     finally:
         # Check for the last commit
         if iters % commit_every != 0:
-            ctx.obj.conn.action = "COM raw"
+            # Instrumentation: Set up module action (ACCHK_REPORT)
+            ctx.obj.conn.action = "COMMIT.raw.data"
             ctx.obj.conn.commit()
             click.echo(f"[{iters}/{iters}] - COMMIT")
