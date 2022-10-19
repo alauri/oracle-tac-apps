@@ -16,6 +16,7 @@ import (
 )
 
 var workdir string
+var dsn string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -40,16 +41,17 @@ func init() {
 
 	// Persistent flags
 	rootCmd.PersistentFlags().StringVarP(&workdir, "workdir", "w", dir,
-		"the absolute path of the configuration folder")
-	rootCmd.PersistentFlags().IntP("dsn", "d", 1,
-		"the connection string to use")
+		"The absolute path of the configuration folder")
+	rootCmd.PersistentFlags().StringVarP(&dsn, "dsn", "d", "localhost",
+		"The connection string to use")
+	rootCmd.Flags().Bool("config", false, "Show the current configuration")
+	rootCmd.Flags().Bool("ping", false, "Check database connection")
 
 	// Register sub-commands
-	rootCmd.AddCommand(configCmd)
-	rootCmd.AddCommand(deleteCmd)
-	rootCmd.AddCommand(insertCmd)
+	rootCmd.AddCommand(cleanupCmd)
+	rootCmd.AddCommand(ingestCmd)
+	rootCmd.AddCommand(removeCmd)
 	rootCmd.AddCommand(resetCmd)
-	rootCmd.AddCommand(updateCmd)
 }
 
 func initConfig() {

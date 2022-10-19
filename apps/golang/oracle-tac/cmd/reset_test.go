@@ -10,6 +10,7 @@ import (
 	"path"
 	"runtime"
 	"testing"
+        "strings"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,9 +25,11 @@ func Test_Reset_No_Args(t *testing.T) {
 
 	rootCmd.SetOut(actual)
 	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "reset"})
+	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "reset"})
 	rootCmd.Execute()
 
-	expected := "[+] - Database has been reset\n"
-	assert.Equal(t, expected, actual.String())
+        // assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
+        assert.Equal(t, 2, strings.Count(actual.String(), "TRUNCATE TABLE"))
+        assert.Equal(t, 2, strings.Count(actual.String(), "ALTER TABLE"))
+        assert.Contains(t, "All tables have been altered.", actual.String())
 }
