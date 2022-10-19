@@ -58,7 +58,7 @@ def cleanup(ctx,
             res = ctx.obj.cur.execute(query).fetchone()
             click.echo(f"[{step}/{iters}] - {query}")
 
-            # Get and clean information
+            # Check empty query result
             if res is None:
                 click.echo(f"[{step}/{iters}] - No row to clean up. Exit.")
                 break

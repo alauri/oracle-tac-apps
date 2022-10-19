@@ -16,16 +16,16 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/alauri/oracle-tac-apps/oracle-tac/db"
+	// "github.com/alauri/oracle-tac-apps/oracle-tac/db"
 )
 
-// deleteCmd represents the delete command
-var deleteCmd = &cobra.Command{
+// removeCmd represents the delete command
+var removeCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete records from the table.",
 	Long:  `Delete records from the table.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		dsn, _ := cmd.Flags().GetInt("dsn")
+		// dsn, _ := cmd.Flags().GetInt("dsn")
 		loop, _ := cmd.Flags().GetBool("loop")
 		iters, _ := cmd.Flags().GetInt("iters")
 		delay, _ := cmd.Flags().GetFloat64("delay")
@@ -36,10 +36,10 @@ var deleteCmd = &cobra.Command{
 		conditions := Conds{0}
 
 		// Retrieve a fresh Database connection
-		conn, err := db.GetDatabase(dsn)
-		if err != nil {
-			panic(err)
-		}
+		// conn, err := db.GetDatabase(dsn)
+		// if err != nil {
+		// 	panic(err)
+		// }
 
 		if loop {
 			iters = 0
@@ -56,7 +56,7 @@ var deleteCmd = &cobra.Command{
 			query := fmt.Sprintf("DELETE FROM %s WHERE id=%d", table, pairs.id)
 
 			// Perform the query
-			db.DoQuery(conn, query)
+			// db.DoQuery(conn, query)
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 
@@ -81,8 +81,8 @@ var deleteCmd = &cobra.Command{
 }
 
 func init() {
-	deleteCmd.Flags().Bool("loop", false, "repeat the same operation forever")
-	deleteCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
-	deleteCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
-	deleteCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
+	removeCmd.Flags().Bool("loop", false, "repeat the same operation forever")
+	removeCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
+	removeCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
+	removeCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
 }
