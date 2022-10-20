@@ -31,5 +31,5 @@ func Test_Reset_No_Args(t *testing.T) {
         // assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
         assert.Equal(t, 2, strings.Count(actual.String(), "TRUNCATE TABLE"))
         assert.Equal(t, 2, strings.Count(actual.String(), "ALTER TABLE"))
-        assert.Contains(t, "All tables have been altered.", actual.String())
+        assert.Contains(t, actual.String(), "All tables have been altered.")
 }

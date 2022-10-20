@@ -1,7 +1,7 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Command ``delete`` is used to delete one or more records from the db.
+Command ``remove`` is used to delete one or more records from the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -15,13 +15,11 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	// "github.com/alauri/oracle-tac-apps/oracle-tac/db"
 )
 
 // removeCmd represents the delete command
 var removeCmd = &cobra.Command{
-	Use:   "delete",
+	Use:   "remove",
 	Short: "Delete records from the table.",
 	Long:  `Delete records from the table.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -32,18 +30,8 @@ var removeCmd = &cobra.Command{
 		commit_every, _ := cmd.Flags().GetInt("commit-every")
 
 		// Define query parameters
-		table := viper.GetViper().GetString("database.table")
-		conditions := Conds{0}
+		table := viper.GetViper().GetString("database.tablejson")
 
-		// Retrieve a fresh Database connection
-		// conn, err := db.GetDatabase(dsn)
-		// if err != nil {
-		// 	panic(err)
-		// }
-
-		if loop {
-			iters = 0
-		}
 		step := 1
 		for {
 			// Exit condition
@@ -52,11 +40,8 @@ var removeCmd = &cobra.Command{
 			}
 
 			// Prepare query with updated conditions
-			pairs := Conds{conditions.id + step}
-			query := fmt.Sprintf("DELETE FROM %s WHERE id=%d", table, pairs.id)
-
+			query := fmt.Sprintf("DELETE FROM %s WHERE LapTime='NaT'", table)
 			// Perform the query
-			// db.DoQuery(conn, query)
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 

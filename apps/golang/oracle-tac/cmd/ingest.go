@@ -12,11 +12,11 @@ package cmd
 import (
 	"fmt"
 	"time"
+	"io/ioutil"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	// "github.com/alauri/oracle-tac-apps/oracle-tac/db"
 )
 
 // ingestCmd represents the ingest command
@@ -30,20 +30,26 @@ var ingestCmd = &cobra.Command{
 		commit_every, _ := cmd.Flags().GetInt("commit-every")
 
 		// Define query parameters
-		table := viper.GetViper().GetString("database.table")
-		conditions := Conds{0}
+		table := viper.GetViper().GetString("database.tableraw")
+		filename := viper.GetViper().GetString("ingest.dumpfile")
 
-		// Retrieve a fresh Database connection
-		// conn, err := db.GetDatabase(dsn)
-		// if err != nil {
-		// 	panic(err)
-		// }
+		// Open the file and check error
+		data, err := ioutil.ReadFile(filename)
+		if err != nil {
+			// TODO: replace panic command
+			panic(err)
+		}
+		lines := strings.Split(string(data), "\n")
 
 		step := 1
-		for {
+		for _, line := range lines[:iters] {
+			// Exit condition
+			if step > iters {
+				break
+			}
+
 			// Prepare query with updated conditions
-			pairs := Conds{conditions.id + step}
-			query := fmt.Sprintf("INSERT INTO %s(id) VALUES(%d)", table, pairs.id)
+			query := fmt.Sprintf("INSERT INTO %s(year,track,data) VALUES(%s)", table, line)
 
 			// Perform the query
 			// db.DoQuery(conn, query)
