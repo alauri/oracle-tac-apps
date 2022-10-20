@@ -34,17 +34,7 @@ var cleanupCmd = &cobra.Command{
                 // Get the first ID to read from the table raw
                 tail := viper.GetViper().GetInt("cleanup.tail")
                 tableraw := viper.GetViper().GetString("database.tableraw")
-                // tablejson := viper.GetViper().GetString("database.tablejson")
 
-		// Retrieve a fresh Database connection
-		// conn, err := db.GetDatabase(dsn)
-		// if err != nil {
-		// 	panic(err)
-		// }
-
-		if loop {
-			iters = 0
-		}
 		step := 1
 		for {
 			// Exit condition
@@ -55,7 +45,7 @@ var cleanupCmd = &cobra.Command{
                         query := fmt.Sprintf(`SELECT * 
                                               FROM %s 
                                               WHERE id=%d`, tableraw, tail)
-                        // TODO: db.DoQuery(conn, query)
+                        // TODO: Retrieve information from the database
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
                                 

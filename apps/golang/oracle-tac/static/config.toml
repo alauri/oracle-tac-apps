@@ -18,6 +18,6 @@ lorem = """Lorem ipsum dolor sit amet, \
 fake = "FAKE"
 
 [ingest]
-dumpfile = "../raw.txt"
+dumpfile = "../../../raw.txt"
 
 [cleanup]

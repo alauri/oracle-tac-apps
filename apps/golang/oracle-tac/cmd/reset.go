@@ -25,26 +25,26 @@ var resetCmd = &cobra.Command{
                 // TODO: instrument action
                 query := fmt.Sprintf("TRUNCATE TABLE %s", tableraw)
                 // TODO: Execute the query
-                fmt.Println(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
+		fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
 
                 // Instrumentation: Set up module action (ACCHK_REPORT)
                 // TODO: instrument action
                 query = fmt.Sprintf("ALTER TABLE %s", tableraw)
                 // TODO: Execute the query
-                fmt.Println(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
+		fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
 
                 // Instrumentation: Set up module action (ACCHK_REPORT)
                 // TODO: instrument action
                 query = fmt.Sprintf("TRUNCATE TABLE %s", tablejson)
                 // TODO: Execute the query
-                fmt.Println(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
+                fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
 
                 // Instrumentation: Set up module action (ACCHK_REPORT)
                 // TODO: instrument action
                 query = fmt.Sprintf("ALTER TABLE %s", tablejson)
                 // TODO: Execute the query
-                fmt.Println(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
+                fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("[+] - %s", query))
 
-                fmt.Println("[+] - All tables have been altered.")
+		fmt.Fprintln(cmd.OutOrStdout(), "[+] - All tables have been altered.")
 	},
 }
