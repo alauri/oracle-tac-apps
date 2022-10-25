@@ -15,7 +15,6 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
 	// "github.com/alauri/oracle-tac-apps/oracle-tac/db"
 )
 
@@ -31,9 +30,9 @@ var cleanupCmd = &cobra.Command{
 		delay, _ := cmd.Flags().GetFloat64("delay")
 		commit_every, _ := cmd.Flags().GetInt("commit-every")
 
-                // Get the first ID to read from the table raw
-                tail := viper.GetViper().GetInt("cleanup.tail")
-                tableraw := viper.GetViper().GetString("database.tableraw")
+		// Get the first ID to read from the table raw
+		tail := viper.GetViper().GetInt("cleanup.tail")
+		tableraw := viper.GetViper().GetString("database.tableraw")
 
 		step := 1
 		for {
@@ -42,17 +41,17 @@ var cleanupCmd = &cobra.Command{
 				break
 			}
 
-                        query := fmt.Sprintf(`SELECT * 
+			query := fmt.Sprintf(`SELECT * 
                                               FROM %s 
                                               WHERE id=%d`, tableraw, tail)
-                        // TODO: Retrieve information from the database
+			// TODO: Retrieve information from the database
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
-                                
-                        // TODO: Check empty query result
 
-                        // TODO: Unpack result into multiple variables
-                        // TODO: Perform query with unpacked variables
+			// TODO: Check empty query result
+
+			// TODO: Unpack result into multiple variables
+			// TODO: Perform query with unpacked variables
 
 			// Commit changes
 			if step%commit_every == 0 {
@@ -61,9 +60,9 @@ var cleanupCmd = &cobra.Command{
 					fmt.Sprintf("[%d/%d] - COMMIT", step, iters))
 			}
 
-                        step += 1
-                        tail += 1
-                        time.Sleep(time.Duration(delay) * time.Second)
+			step += 1
+			tail += 1
+			time.Sleep(time.Duration(delay) * time.Second)
 		}
 
 		// Chech the last commit
@@ -76,6 +75,8 @@ var cleanupCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.AddCommand(cleanupCmd)
+
 	cleanupCmd.Flags().Bool("loop", false, "repeat the same operation forever")
 	cleanupCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
 	cleanupCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")

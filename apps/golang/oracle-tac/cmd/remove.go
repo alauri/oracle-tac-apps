@@ -66,6 +66,8 @@ var removeCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.AddCommand(removeCmd)
+
 	removeCmd.Flags().Bool("loop", false, "repeat the same operation forever")
 	removeCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
 	removeCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")

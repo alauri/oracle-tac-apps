@@ -9,8 +9,8 @@ import (
 	"bytes"
 	"path"
 	"runtime"
+	"strings"
 	"testing"
-        "strings"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,7 +28,7 @@ func Test_Cleanup_No_Args(t *testing.T) {
 	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "cleanup"})
 	rootCmd.Execute()
 
-        assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
+	assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
 }
 
 func Test_Cleanup_With_Args(t *testing.T) {
@@ -43,10 +43,10 @@ func Test_Cleanup_With_Args(t *testing.T) {
 	rootCmd.SetOut(actual)
 	rootCmd.SetErr(actual)
 	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "cleanup",
-                                 "--iters", "5",
-                                 "--delay", "0.05",
-                                 "--commit-every", "2"})
+		"--iters", "5",
+		"--delay", "0.05",
+		"--commit-every", "2"})
 	rootCmd.Execute()
 
-        assert.Equal(t, 3, strings.Count(actual.String(), "COMMIT"))
+	assert.Equal(t, 3, strings.Count(actual.String(), "COMMIT"))
 }

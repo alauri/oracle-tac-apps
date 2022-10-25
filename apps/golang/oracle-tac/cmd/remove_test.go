@@ -26,12 +26,12 @@ func Test_Remove_No_Args(t *testing.T) {
 	rootCmd.SetOut(actual)
 	rootCmd.SetErr(actual)
 	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "remove",
-                                 "--delay", "0.05"})
+		"--delay", "0.05"})
 	rootCmd.Execute()
 
-        assert.Equal(t, 1, strings.Count(actual.String(), "FROM json_tel WHERE LapTime='NaT'"))
-        assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
-        // assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
+	assert.Equal(t, 1, strings.Count(actual.String(), "FROM json_tel WHERE LapTime='NaT'"))
+	assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
+	// assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
 }
 
 func Test_Remove_With_Args(t *testing.T) {
@@ -46,12 +46,12 @@ func Test_Remove_With_Args(t *testing.T) {
 	rootCmd.SetOut(actual)
 	rootCmd.SetErr(actual)
 	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "remove",
-                                 "--iters", "5",
-                                 "--delay", "0.05",
-                                 "--commit-every", "2"})
+		"--iters", "5",
+		"--delay", "0.05",
+		"--commit-every", "2"})
 	rootCmd.Execute()
 
-        assert.Equal(t, 5, strings.Count(actual.String(), "FROM json_tel WHERE LapTime='NaT'"))
-        assert.Equal(t, 3, strings.Count(actual.String(), "COMMIT"))
-        // assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
+	assert.Equal(t, 5, strings.Count(actual.String(), "FROM json_tel WHERE LapTime='NaT'"))
+	assert.Equal(t, 3, strings.Count(actual.String(), "COMMIT"))
+	// assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
 }
