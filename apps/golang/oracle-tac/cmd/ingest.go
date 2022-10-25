@@ -11,9 +11,9 @@ package cmd
 
 import (
 	"fmt"
-	"time"
 	"io/ioutil"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -77,6 +77,8 @@ var ingestCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.AddCommand(ingestCmd)
+
 	ingestCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
 	ingestCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
 	ingestCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
