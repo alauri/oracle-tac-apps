@@ -5,34 +5,51 @@ Main command implementation.
 */
 package cmd
 
-import (
-	"encoding/json"
-	"fmt"
-	"os"
-	"path"
-	"runtime"
-	"strings"
+import "database/sql"
+import "encoding/json"
+import "fmt"
+import "os"
+import "path"
+import "runtime"
+import "strings"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-)
+import "github.com/spf13/cobra"
+import "github.com/spf13/viper"
 
+import _ "github.com/godror/godror"
+
+// Package's variables
 var workdir string
 var dsn string
+var Db *sql.DB
+
+// Database connection function using the GodRor driver
+var connect = func(username string, password string, dsn string) *sql.DB {
+	conn, err := sql.Open("godror", fmt.Sprintf("%s/%s@%s", username, password, dsn))
+	if err != nil {
+		panic(err.Error())
+	}
+	return conn
+}
 
 var rootCmd = &cobra.Command{
 	Use:   "oracle-tac-go",
 	Short: "Oracle High Availability CLI in Golang",
 	Long:  `Oracle High Availability CLI in Golang`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		// Check the given DSN
+		// Retrieve database information
+		username := viper.GetString("database.username")
+		password := viper.GetString("database.password")
 		dsn, _ := cmd.Flags().GetString("dsn")
-		dsn = strings.Join([]string{"dsn", dsn}, ".")
 
 		// Execution can't procede with an invalid dsn value
-		if !viper.IsSet(dsn) {
+		dsn_cfg := strings.Join([]string{"dsn", dsn}, ".")
+		if !viper.IsSet(dsn_cfg) {
 			panic("Invalid value for '-d/--dsn'")
 		}
+
+		// Initialize the database instance within the variable Db
+		Db = connect(username, password, dsn)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		ping, _ := cmd.Flags().GetBool("ping")
@@ -40,18 +57,24 @@ var rootCmd = &cobra.Command{
 
 		// Ping the database and exit
 		if ping {
+			Db.Ping()
 			cmd.Println("[+] - Database reachable")
-		// Puts out the configuration and exit
+			// Puts out the configuration and exit
 		} else if config {
 			config, _ := json.MarshalIndent(viper.AllSettings(), "", "  ")
 			cmd.Println(string(config))
-                // Default behavior to puts out the help message
-		} else { cmd.Help() }
+			// Default behavior to puts out the help message
+		} else {
+			cmd.Help()
+		}
+	},
+	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		Db.Close()
 	},
 }
 
 func HandleError() {
-        /* Handle `panic` error. */
+	/* Handle `panic` error. */
 	if err := recover(); err != nil {
 		rootCmd.Println(fmt.Sprintf("Error occurred: %s", err))
 	}
@@ -60,20 +83,20 @@ func HandleError() {
 func Execute() {
 	/* Main command entry point.
 
-        Set up a defer function to handle any possible error occurred during
-        command execution.
-        */
+	   Set up a defer function to handle any possible error occurred during
+	   command execution.
+	*/
 	defer HandleError()
 
-        // Start the main command
+	// Start the main command
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
-func setUp() {
-        /* Initialization function, called before any command execution. */
+func initConfig() {
+	/* Initialization function, called before any command execution. */
 
 	// Read configuration file
 	viper.AddConfigPath(workdir)
@@ -83,22 +106,15 @@ func setUp() {
 	// If a config file is found, read it in.
 	err := viper.ReadInConfig()
 	if err != nil {
-		rootCmd.Println(fmt.Sprintf("Error reading confugration file: %s", err))
-		os.Exit(1)
+		panic(fmt.Sprintf("Error reading confugration file: %s", err))
 	}
 }
 
-func tearDown() {
-	/* Finalizing function, called after any command execution. */
-	rootCmd.Println("Finalizing...")
-}
-
 func init() {
-        /* Define main command's hooks and flags. */
+	/* Define main command's hooks and flags. */
 
-	// Define CLI hooks
-	cobra.OnInitialize(setUp)
-	cobra.OnFinalize(tearDown)
+	// CLI hooks
+	cobra.OnInitialize(initConfig)
 
 	// Default value for the working directory
 	_, filename, _, _ := runtime.Caller(0)

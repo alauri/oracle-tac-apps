@@ -1,18 +1,16 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Tests for the package ``root.go``
+Tests for the package “root.go“
 */
 package cmd
 
-import (
-	"bytes"
-	"path"
-	"runtime"
-	"testing"
+import "bytes"
+import "path"
+import "runtime"
+import "testing"
 
-	"github.com/stretchr/testify/assert"
-)
+import "github.com/stretchr/testify/assert"
 
 func Test_Root_usage(t *testing.T) {
 	// Invoke the CLI with no commands, expecting an 'Usage ...' message
@@ -47,6 +45,8 @@ func Test_Root_config(t *testing.T) {
 
 func Test_Root_ping(t *testing.T) {
 	// Invoke the CLI by asking to ping the database.
+	_, tearDown := setUp(t)
+	defer tearDown(t)
 
 	_, filename, _, _ := runtime.Caller(0)
 	static := path.Join(path.Dir(filename), "../static")

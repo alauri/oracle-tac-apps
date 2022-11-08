@@ -1,7 +1,7 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Command ``remove`` is used to delete one or more records from the db.
+Command “remove“ is used to delete one or more records from the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -9,13 +9,11 @@ after how many operations commit the changes.
 */
 package cmd
 
-import (
-	"fmt"
-	"time"
+import "fmt"
+import "time"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-)
+import "github.com/spf13/cobra"
+import "github.com/spf13/viper"
 
 // removeCmd represents the delete command
 var removeCmd = &cobra.Command{

@@ -1,19 +1,17 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Tests for the package ``reset.go``
+Tests for the package “reset.go“
 */
 package cmd
 
-import (
-	"bytes"
-	"path"
-	"runtime"
-	"strings"
-	"testing"
+import "bytes"
+import "path"
+import "runtime"
+import "strings"
+import "testing"
 
-	"github.com/stretchr/testify/assert"
-)
+import "github.com/stretchr/testify/assert"
 
 func Test_Reset_No_Args(t *testing.T) {
 	// Invoke the command ``reset`` with no options.
