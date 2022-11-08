@@ -1,7 +1,7 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Command ``update`` to change already existing records within the db.
+Command “update“ to change already existing records within the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -9,14 +9,11 @@ after how many operations commit the changes.
 */
 package cmd
 
-import (
-	"fmt"
-	"time"
+import "fmt"
+import "time"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	// "github.com/alauri/oracle-tac-apps/oracle-tac/db"
-)
+import "github.com/spf13/cobra"
+import "github.com/spf13/viper"
 
 // cleanupCmd represents the update command
 var cleanupCmd = &cobra.Command{
