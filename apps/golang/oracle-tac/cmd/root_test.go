@@ -9,6 +9,7 @@ import "bytes"
 import "path"
 import "runtime"
 import "testing"
+import "strings"
 
 import "github.com/stretchr/testify/assert"
 
@@ -41,12 +42,13 @@ func Test_Root_config(t *testing.T) {
 
 	assert.Contains(t, actual.String(), "{")
 	assert.NotContains(t, actual.String(), "Usage:")
+	assert.NotContains(t, actual.String(), "('server1', 'vm1')")
 }
 
 func Test_Root_ping(t *testing.T) {
 	// Invoke the CLI by asking to ping the database.
-	_, tearDown := setUp(t)
-	defer tearDown(t)
+	_, tearDownDatabase := setUpDatabase(t)
+	defer tearDownDatabase(t)
 
 	_, filename, _, _ := runtime.Caller(0)
 	static := path.Join(path.Dir(filename), "../static")
@@ -58,6 +60,7 @@ func Test_Root_ping(t *testing.T) {
 	rootCmd.Execute()
 
 	assert.Contains(t, actual.String(), "[+] - Database reachable")
+	assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
 }
 
 func Test_Root_error(t *testing.T) {

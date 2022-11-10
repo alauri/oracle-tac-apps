@@ -1,7 +1,7 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Command ``ingest`` is used store new records within the db.
+Command “ingest“ is used store new records within the db.
 
 It can repeat the same operation in loop or a defined numbers of times. It can
 be possible to define a delay between one operation and the next one and also
@@ -9,15 +9,13 @@ after how many operations commit the changes.
 */
 package cmd
 
-import (
-	"fmt"
-	"io/ioutil"
-	"strings"
-	"time"
+import "fmt"
+import "io/ioutil"
+import "strings"
+import "time"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-)
+import "github.com/spf13/cobra"
+import "github.com/spf13/viper"
 
 // ingestCmd represents the ingest command
 var ingestCmd = &cobra.Command{
@@ -36,7 +34,6 @@ var ingestCmd = &cobra.Command{
 		// Open the file and check error
 		data, err := ioutil.ReadFile(filename)
 		if err != nil {
-			// TODO: replace panic command
 			panic(err)
 		}
 		lines := strings.Split(string(data), "\n")
@@ -77,6 +74,8 @@ var ingestCmd = &cobra.Command{
 }
 
 func init() {
+	/* Define ingest command's flags.
+	 */
 	rootCmd.AddCommand(ingestCmd)
 
 	ingestCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
