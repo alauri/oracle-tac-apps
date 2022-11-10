@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
-
 */
 package main
 

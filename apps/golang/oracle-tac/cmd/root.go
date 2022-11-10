@@ -5,7 +5,6 @@ Main command implementation.
 */
 package cmd
 
-import "database/sql"
 import "encoding/json"
 import "fmt"
 import "os"
@@ -16,21 +15,11 @@ import "strings"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
-import _ "github.com/godror/godror"
+import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
 
 // Package's variables
 var workdir string
 var dsn string
-var Db *sql.DB
-
-// Database connection function using the GodRor driver
-var connect = func(username string, password string, dsn string) *sql.DB {
-	conn, err := sql.Open("godror", fmt.Sprintf("%s/%s@%s", username, password, dsn))
-	if err != nil {
-		panic(err.Error())
-	}
-	return conn
-}
 
 var rootCmd = &cobra.Command{
 	Use:   "oracle-tac-go",
@@ -49,7 +38,18 @@ var rootCmd = &cobra.Command{
 		}
 
 		// Initialize the database instance within the variable Db
-		Db = connect(username, password, dsn)
+		database.Connect(username, password, dsn)
+
+                // Get DB information before any other action with the database
+		ping, _ := cmd.Flags().GetBool("ping")
+                root_cmd := cmd.CalledAs() == "oracle-tac-go"
+                if (root_cmd && ping) || !root_cmd {
+			result, err := database.Get_Db_Info()
+			if err != nil {
+				panic(err)
+			}
+			cmd.Println("[+] - ", result)
+                }
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		ping, _ := cmd.Flags().GetBool("ping")
@@ -57,7 +57,11 @@ var rootCmd = &cobra.Command{
 
 		// Ping the database and exit
 		if ping {
-			Db.Ping()
+			// Try to ping the database
+			err := database.Db.Ping()
+			if err != nil {
+				panic("[-] - Database not reachable")
+			}
 			cmd.Println("[+] - Database reachable")
 			// Puts out the configuration and exit
 		} else if config {
@@ -65,11 +69,21 @@ var rootCmd = &cobra.Command{
 			cmd.Println(string(config))
 			// Default behavior to puts out the help message
 		} else {
-			cmd.Help()
+			cmd.Usage()
 		}
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
-		Db.Close()
+                // Get DB information before any other action with the database
+		ping, _ := cmd.Flags().GetBool("ping")
+                root_cmd := cmd.CalledAs() == "oracle-tac-go"
+                if (root_cmd && ping) || !root_cmd {
+			result, err := database.Get_Db_Info()
+			if err != nil {
+				panic(err)
+			}
+			cmd.Println("[+] - ", result)
+                }
+		database.Db.Close()
 	},
 }
 

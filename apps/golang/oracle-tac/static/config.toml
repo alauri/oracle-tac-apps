@@ -16,8 +16,3 @@ lorem = """Lorem ipsum dolor sit amet, \
            labore et dolore magna aliqua.
 """
 fake = "FAKE"
-
-[ingest]
-dumpfile = "../../../raw.txt"
-
-[cleanup]
