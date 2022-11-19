@@ -40,16 +40,16 @@ var rootCmd = &cobra.Command{
 		// Initialize the database instance within the variable Db
 		database.Connect(username, password, dsn)
 
-                // Get DB information before any other action with the database
+		// Get DB information before any other action with the database
 		ping, _ := cmd.Flags().GetBool("ping")
-                root_cmd := cmd.CalledAs() == "oracle-tac-go"
-                if (root_cmd && ping) || !root_cmd {
+		root_cmd := cmd.CalledAs() == "oracle-tac-go"
+		if (root_cmd && ping) || !root_cmd {
 			result, err := database.Get_Db_Info()
 			if err != nil {
 				panic(err)
 			}
 			cmd.Println("[+] - ", result)
-                }
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		ping, _ := cmd.Flags().GetBool("ping")
@@ -73,16 +73,16 @@ var rootCmd = &cobra.Command{
 		}
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
-                // Get DB information before any other action with the database
+		// Get DB information before any other action with the database
 		ping, _ := cmd.Flags().GetBool("ping")
-                root_cmd := cmd.CalledAs() == "oracle-tac-go"
-                if (root_cmd && ping) || !root_cmd {
+		root_cmd := cmd.CalledAs() == "oracle-tac-go"
+		if (root_cmd && ping) || !root_cmd {
 			result, err := database.Get_Db_Info()
 			if err != nil {
 				panic(err)
 			}
 			cmd.Println("[+] - ", result)
-                }
+		}
 		database.Db.Close()
 	},
 }

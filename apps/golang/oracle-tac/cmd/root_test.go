@@ -12,6 +12,7 @@ import "testing"
 import "strings"
 
 import "github.com/stretchr/testify/assert"
+import "github.com/DATA-DOG/go-sqlmock"
 
 func Test_Root_usage(t *testing.T) {
 	// Invoke the CLI with no commands, expecting an 'Usage ...' message
@@ -47,8 +48,11 @@ func Test_Root_config(t *testing.T) {
 
 func Test_Root_ping(t *testing.T) {
 	// Invoke the CLI by asking to ping the database.
-	_, tearDownDatabase := setUpDatabase(t)
+	mock, tearDownDatabase := setUpDatabase(t)
 	defer tearDownDatabase(t)
+
+	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
+	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
 
 	_, filename, _, _ := runtime.Caller(0)
 	static := path.Join(path.Dir(filename), "../static")

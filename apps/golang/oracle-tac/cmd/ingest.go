@@ -12,10 +12,13 @@ package cmd
 import "fmt"
 import "io/ioutil"
 import "strings"
+import "path"
 import "time"
 
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
+
+import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
 
 // ingestCmd represents the ingest command
 var ingestCmd = &cobra.Command{
@@ -26,19 +29,25 @@ var ingestCmd = &cobra.Command{
 		iters, _ := cmd.Flags().GetInt("iters")
 		delay, _ := cmd.Flags().GetFloat64("delay")
 		commit_every, _ := cmd.Flags().GetInt("commit-every")
+		workdir, _ := cmd.Flags().GetString("workdir")
 
 		// Define query parameters
 		table := viper.GetViper().GetString("database.tableraw")
-		filename := viper.GetViper().GetString("ingest.dumpfile")
 
 		// Open the file and check error
-		data, err := ioutil.ReadFile(filename)
+		data, err := ioutil.ReadFile(path.Join(workdir, "../../../raw.txt"))
 		if err != nil {
 			panic(err)
 		}
-		lines := strings.Split(string(data), "\n")
 
+		lines := strings.Split(string(data), "\n")
 		step := 1
+
+		tx, err := database.Db.Begin()
+		if err != nil {
+			panic(err)
+		}
+
 		for _, line := range lines[:iters] {
 			// Exit condition
 			if step > iters {
@@ -49,15 +58,13 @@ var ingestCmd = &cobra.Command{
 			query := fmt.Sprintf("INSERT INTO %s(year,track,data) VALUES(%s)", table, line)
 
 			// Perform the query
-			// db.DoQuery(conn, query)
-			fmt.Fprintln(cmd.OutOrStdout(),
-				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
+			tx.Exec(query)
+			cmd.Println(fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 
 			// Commit changes
 			if step%commit_every == 0 {
-				// TODO: insert a database commit operation here
-				fmt.Fprintln(cmd.OutOrStdout(),
-					fmt.Sprintf("[%d/%d] - COMMIT", step, iters))
+				tx.Commit()
+				cmd.Println(fmt.Sprintf("[%d/%d] - COMMIT", step, iters))
 			}
 
 			step += 1
@@ -66,9 +73,8 @@ var ingestCmd = &cobra.Command{
 
 		// Chech the last commit
 		if iters%commit_every != 0 {
-			// TODO: insert a database commit operation here
-			fmt.Fprintln(cmd.OutOrStdout(),
-				fmt.Sprintf("[%d/%d] - COMMIT", iters, iters))
+			tx.Commit()
+			cmd.Println(fmt.Sprintf("[%d/%d] - COMMIT", iters, iters))
 		}
 	},
 }
