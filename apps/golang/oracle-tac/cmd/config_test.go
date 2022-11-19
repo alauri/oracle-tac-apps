@@ -20,8 +20,6 @@ func setUpDatabase(t *testing.T) (sqlmock.Sqlmock, func(t *testing.T)) {
 	// Below are common operations to all the CLI commands
 	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
 	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
-	rows = sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
-	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
 
 	// Mocking the connection function by returning a mocked database
 	// instance
