@@ -8,6 +8,8 @@ import "fmt"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
+import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+
 // resetCmd represents the reset command
 var resetCmd = &cobra.Command{
 	Use:   "reset",
@@ -21,25 +23,25 @@ var resetCmd = &cobra.Command{
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query := fmt.Sprintf("TRUNCATE TABLE %s", tableraw)
-		// TODO: Execute the query
+                database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query = fmt.Sprintf("ALTER TABLE %s", tableraw)
-		// TODO: Execute the query
+                database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query = fmt.Sprintf("TRUNCATE TABLE %s", tablejson)
-		// TODO: Execute the query
+                database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query = fmt.Sprintf("ALTER TABLE %s", tablejson)
-		// TODO: Execute the query
+                database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		cmd.Println("[+] - All tables have been altered.")
