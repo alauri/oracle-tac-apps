@@ -23,25 +23,25 @@ var resetCmd = &cobra.Command{
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query := fmt.Sprintf("TRUNCATE TABLE %s", tableraw)
-                database.Db.Query(query)
+		database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query = fmt.Sprintf("ALTER TABLE %s", tableraw)
-                database.Db.Query(query)
+		database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query = fmt.Sprintf("TRUNCATE TABLE %s", tablejson)
-                database.Db.Query(query)
+		database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		// Instrumentation: Set up module action (ACCHK_REPORT)
 		// TODO: instrument action
 		query = fmt.Sprintf("ALTER TABLE %s", tablejson)
-                database.Db.Query(query)
+		database.Db.Query(query)
 		cmd.Println(fmt.Sprintf("[+] - %s", query))
 
 		cmd.Println("[+] - All tables have been altered.")
