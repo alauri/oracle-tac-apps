@@ -15,6 +15,8 @@ import "time"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
+import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+
 // removeCmd represents the delete command
 var removeCmd = &cobra.Command{
 	Use:   "remove",
@@ -31,6 +33,12 @@ var removeCmd = &cobra.Command{
 		table := viper.GetViper().GetString("database.tablejson")
 
 		step := 1
+
+		tx, err := database.Db.Begin()
+		if err != nil {
+			panic(err)
+		}
+
 		for {
 			// Exit condition
 			if !loop && step > iters {
@@ -39,13 +47,13 @@ var removeCmd = &cobra.Command{
 
 			// Prepare query with updated conditions
 			query := fmt.Sprintf("DELETE FROM %s WHERE LapTime='NaT'", table)
-			// Perform the query
+			tx.Exec(query)
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 
 			// Commit changes
 			if step%commit_every == 0 {
-				// TODO: insert a database commit operation here
+				tx.Commit()
 				fmt.Fprintln(cmd.OutOrStdout(),
 					fmt.Sprintf("[%d/%d] - COMMIT", step, iters))
 			}
@@ -56,7 +64,7 @@ var removeCmd = &cobra.Command{
 
 		// Chech the last commit
 		if iters%commit_every != 0 {
-			// TODO: insert a database commit operation here
+			tx.Commit()
 			fmt.Fprintln(cmd.OutOrStdout(),
 				fmt.Sprintf("[%d/%d] - COMMIT", iters, iters))
 		}

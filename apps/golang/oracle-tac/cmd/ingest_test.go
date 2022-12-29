@@ -48,6 +48,8 @@ func Test_Ingest_Args(t *testing.T) {
 	defer tearDownDatabase(t)
 
 	mock.ExpectBegin()
+	mock.ExpectExec("INSERT INTO raw_tel")
+	mock.ExpectCommit()
 	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
 	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
 
