@@ -11,9 +11,13 @@ package cmd
 
 import "fmt"
 import "time"
+import "strings"
+import "strconv"
 
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
+
+import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
 
 // cleanupCmd represents the update command
 var cleanupCmd = &cobra.Command{
@@ -28,45 +32,81 @@ var cleanupCmd = &cobra.Command{
 		commit_every, _ := cmd.Flags().GetInt("commit-every")
 
 		// Get the first ID to read from the table raw
-		tail := viper.GetViper().GetInt("cleanup.tail")
 		tableraw := viper.GetViper().GetString("database.tableraw")
+		tablejson := viper.GetViper().GetString("database.tablejson")
 
 		step := 1
+                rowid := 1
+
+		tx, err := database.Db.Begin()
+		if err != nil {
+			panic(err)
+		}
+
 		for {
 			// Exit condition
 			if !loop && step > iters {
 				break
 			}
 
-			query := fmt.Sprintf(`SELECT * 
-                                              FROM %s 
-                                              WHERE id=%d`, tableraw, tail)
-			// TODO: Retrieve information from the database
-			fmt.Fprintln(cmd.OutOrStdout(),
-				fmt.Sprintf("[%d/%d] - %s", step, iters, query))
+		        query := fmt.Sprintf(`SELECT year, track, data
+                                              FROM %s
+                                              WHERE id=%d`, tableraw, rowid)
+                        results, err := tx.Query(query)
+                        defer results.Close()
+                        if err != nil {
+                                panic(err)
+                        }
+                        cmd.Println(fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 
 			// TODO: Check empty query result
 
-			// TODO: Unpack result into multiple variables
-			// TODO: Perform query with unpacked variables
+                        // Read results and split data information into
+                        // variables
+                        var year int
+                        var track string
+                        var data string
+                        for results.Next() {
+                                if err := results.Scan(&year, &track, &data); err != nil {
+                                        panic(err)
+                                }
+                        }
+			lt, ln, team, driver := func() (string, int, string, string) {
+				items := strings.Split(data, "|")
+                                i, _ := strconv.Atoi(items[1])
+				return strings.Replace(items[0], "0 days ", "", 1), i, items[2], items[3]
+			}()
+
+                        // Insert into the table the cleaned data
+                        query = fmt.Sprintf(`INSERT INTO %s(year,track,laptime,lapnumber,team,driver) 
+                                             VALUES('%d','%s','%s',%d,'%s','%s')`,
+                                             tablejson, year, track, lt, ln, team, driver)
+			tx.Exec(query)
+                        cmd.Println(fmt.Sprintf("[%d/%d] - %s", step, iters, query))
 
 			// Commit changes
 			if step%commit_every == 0 {
-				// TODO: Commit operation
-				fmt.Fprintln(cmd.OutOrStdout(),
-					fmt.Sprintf("[%d/%d] - COMMIT", step, iters))
+				tx.Commit()
+				cmd.Println(fmt.Sprintf("[%d/%d] - COMMIT", step, iters))
+
+                                // Open a new transaction
+                                if step != iters {
+                                        tx, err = database.Db.Begin()
+                                        if err != nil {
+                                                panic(err)
+                                        }
+                                }
 			}
 
 			step += 1
-			tail += 1
+                        rowid += 1
 			time.Sleep(time.Duration(delay) * time.Second)
 		}
 
 		// Chech the last commit
 		if iters%commit_every != 0 {
-			// TODO: insert a database commit operation here
-			fmt.Fprintln(cmd.OutOrStdout(),
-				fmt.Sprintf("[%d/%d] - COMMIT", iters, iters))
+			tx.Commit()
+			cmd.Println(fmt.Sprintf("[%d/%d] - COMMIT", iters, iters))
 		}
 	},
 }
