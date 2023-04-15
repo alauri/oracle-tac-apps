@@ -1,6 +1,7 @@
 # Python ignore files
 __pycache__
 
+.coverage
 *.pyc
 
 

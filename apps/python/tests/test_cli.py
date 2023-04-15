@@ -8,7 +8,7 @@ from otac import cli
 
 
 def test_usage(runner, static) -> None:
-    """Invoke the CLI with no commands and see how it works.
+    """Invoke the CLI with no commands, expecting an 'Usage ...' message.
 
     Returns:
         Nothing
@@ -32,7 +32,7 @@ def test_config(runner, static) -> None:
 
 
 def test_ping(runner, static) -> None:
-    """Invoke the CLI and check the connection to the database.
+    """Invoke the CLI by asking to ping the database.
 
     Returns:
         Nothing

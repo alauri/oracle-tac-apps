@@ -1,158 +1,34 @@
-/*
-Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
-
-Tests for the package ``config.go``
-*/
+/* Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
+*
+* Unit tests utility for the package `cmd`.
+ */
 package cmd
 
-import (
-	"bytes"
-	"io/ioutil"
-	"os"
-	"path"
-	"runtime"
-	"testing"
+import "fmt"
+import "testing"
 
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/assert"
-)
+import "github.com/DATA-DOG/go-sqlmock"
+import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
 
-func copyConfiguraton(source string, destination string) {
-	// Copy a source to a destination
-
-	data, err := ioutil.ReadFile(source)
+func setUpDatabase(t *testing.T) (sqlmock.Sqlmock, func(t *testing.T)) {
+	// Create a database mock instance
+	db, mock, err := sqlmock.New()
 	if err != nil {
-		panic(err)
-	}
-	err = ioutil.WriteFile(destination, data, 0644)
-	if err != nil {
-		panic(err)
-	}
-}
-
-type driver struct {
-	Username string `toml:"username"`
-	Password string `toml:"password"`
-}
-
-type database struct {
-	Table string `toml:"table"`
-}
-
-type config struct {
-	Driver   driver   `toml:"driver"`
-	Database database `toml:"database"`
-}
-
-func readConfiguration(path string) config {
-	// Read configuration TOML file
-
-	var vp = viper.New()
-	var ctoml config
-
-	vp.AddConfigPath(path)
-	vp.SetConfigName("config")
-	vp.SetConfigType("toml")
-
-	// Read the TOML file
-	err := vp.ReadInConfig()
-	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("Error in mocking the database: %s", err))
 	}
 
-	// Convert the TOML file into struct
-	err = vp.Unmarshal(&ctoml)
-	if err != nil {
-		panic(err)
+	// Below are common operations to all the CLI commands
+	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
+	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
+
+	// Mocking the connection function by returning a mocked database
+	// instance
+	database.Connect = func(username string, password string, dsn string) {
+		database.Db = db
 	}
-	return ctoml
-}
 
-func setupSuite(tb testing.TB, st string) func(tb testing.TB, st string) {
-	// Setup for the current module
-	// Temporarly duplicate the TOML configuration file.
-	src := path.Join(st, "config.toml")
-	dst := path.Join(st, "config.bak")
-	copyConfiguraton(src, dst)
-
-	return func(tb testing.TB, st string) {
-		// Teardown for the current module.
-		// Delete temporary copy of the TOML configuration file.
-		src := path.Join(st, "config.bak")
-		dst := path.Join(st, "config.toml")
-		copyConfiguraton(src, dst)
-		os.Remove(src)
-
-		// TODO: find a way more elegant to revert conf file's values
-		viper.Set("driver.username", "test")
-		viper.Set("driver.password", "test")
-		viper.Set("database.table", "test")
+	// TearDown function to return and use later within the tests
+	return mock, func(t *testing.T) {
+		db.Close()
 	}
-}
-
-func Test_Package(t *testing.T) {
-	_, filename, _, _ := runtime.Caller(0)
-	static := path.Join(path.Dir(filename), "../static")
-
-	teardownSuite := setupSuite(t, static)
-	defer teardownSuite(t, static)
-
-	t.Run("Test_No_Args", func(t *testing.T) {
-		actual := new(bytes.Buffer)
-
-		rootCmd.SetOut(actual)
-		rootCmd.SetErr(actual)
-		rootCmd.SetArgs([]string{"-w", static, "config"})
-		rootCmd.Execute()
-
-		assert.Contains(t, actual.String(), "Usage:")
-	})
-
-	t.Run("Test_Info", func(t *testing.T) {
-		actual := new(bytes.Buffer)
-
-		rootCmd.SetOut(actual)
-		rootCmd.SetErr(actual)
-		rootCmd.SetArgs([]string{"-w", static, "config", "--info"})
-		rootCmd.Execute()
-
-		assert.Contains(t, actual.String(), "Current configuration")
-		assert.NotContains(t, actual.String(), "Usage:")
-	})
-
-	t.Run("Test_Username", func(t *testing.T) {
-		actual := new(bytes.Buffer)
-
-		rootCmd.SetOut(actual)
-		rootCmd.SetErr(actual)
-		rootCmd.SetArgs([]string{"-w", static, "config", "driver", "--username", "fake"})
-		rootCmd.Execute()
-
-		infile := readConfiguration(static)
-		assert.Equal(t, "fake", infile.Driver.Username)
-	})
-
-	t.Run("Test_Password", func(t *testing.T) {
-		actual := new(bytes.Buffer)
-
-		rootCmd.SetOut(actual)
-		rootCmd.SetErr(actual)
-		rootCmd.SetArgs([]string{"-w", static, "config", "driver", "--password", "fake"})
-		rootCmd.Execute()
-
-		infile := readConfiguration(static)
-		assert.Equal(t, "fake", infile.Driver.Password)
-	})
-
-	t.Run("Test_Table", func(t *testing.T) {
-		actual := new(bytes.Buffer)
-
-		rootCmd.SetOut(actual)
-		rootCmd.SetErr(actual)
-		rootCmd.SetArgs([]string{"-w", static, "config", "database", "--table", "fake"})
-		rootCmd.Execute()
-
-		infile := readConfiguration(static)
-		assert.Equal(t, "fake", infile.Database.Table)
-	})
 }

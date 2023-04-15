@@ -1,21 +1,21 @@
 /*
 Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
-Tests for the package ``root.go``
+Tests for the package “root.go“
 */
 package cmd
 
-import (
-	"bytes"
-	"path"
-	"runtime"
-	"testing"
+import "bytes"
+import "path"
+import "runtime"
+import "testing"
+import "strings"
 
-	"github.com/stretchr/testify/assert"
-)
+import "github.com/stretchr/testify/assert"
+import "github.com/DATA-DOG/go-sqlmock"
 
-func Test_Root(t *testing.T) {
-	// Invoke the main command.
+func Test_Root_usage(t *testing.T) {
+	// Invoke the CLI with no commands, expecting an 'Usage ...' message
 
 	_, filename, _, _ := runtime.Caller(0)
 	static := path.Join(path.Dir(filename), "../static")
@@ -23,9 +23,60 @@ func Test_Root(t *testing.T) {
 	actual := new(bytes.Buffer)
 	rootCmd.SetOut(actual)
 	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "5"})
+	rootCmd.SetArgs([]string{"-w", static})
 	rootCmd.Execute()
 
-	expected := "Use \"oracle-tac [command] --help"
-	assert.Contains(t, actual.String(), expected)
+	assert.Contains(t, actual.String(), "oracle-tac-go [flags]")
+}
+
+func Test_Root_config(t *testing.T) {
+	// Invoke the CLI by asking information about the current configuration.
+
+	_, filename, _, _ := runtime.Caller(0)
+	static := path.Join(path.Dir(filename), "../static")
+
+	actual := new(bytes.Buffer)
+	rootCmd.SetOut(actual)
+	rootCmd.SetErr(actual)
+	rootCmd.SetArgs([]string{"-w", static, "--config"})
+	rootCmd.Execute()
+
+	assert.Contains(t, actual.String(), "{")
+	assert.NotContains(t, actual.String(), "Usage:")
+	assert.NotContains(t, actual.String(), "('server1', 'vm1')")
+}
+
+func Test_Root_ping(t *testing.T) {
+	// Invoke the CLI by asking to ping the database.
+	mock, tearDownDatabase := setUpDatabase(t)
+	defer tearDownDatabase(t)
+
+	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
+	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
+
+	_, filename, _, _ := runtime.Caller(0)
+	static := path.Join(path.Dir(filename), "../static")
+
+	actual := new(bytes.Buffer)
+	rootCmd.SetOut(actual)
+	rootCmd.SetErr(actual)
+	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "--ping"})
+	rootCmd.Execute()
+
+	assert.Contains(t, actual.String(), "[+] - Database reachable")
+	assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
+}
+
+func Test_Root_error(t *testing.T) {
+	// Invoke the CLI with a wrong dsn value.
+
+	_, filename, _, _ := runtime.Caller(0)
+	static := path.Join(path.Dir(filename), "../static")
+
+	actual := new(bytes.Buffer)
+	rootCmd.SetOut(actual)
+	rootCmd.SetErr(actual)
+	rootCmd.SetArgs([]string{"-w", static, "-d", "wrong", "ingest"})
+
+	assert.PanicsWithValue(t, "Invalid value for '-d/--dsn'", func() { rootCmd.Execute() })
 }
