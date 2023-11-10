@@ -15,13 +15,13 @@ import "strings"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
-import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+import "github.com/alauri/oracle-tac-apps/internal/database"
 
 // Package's variables
 var workdir string
 var dsn string
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:   "oracle-tac-go",
 	Short: "Oracle High Availability CLI in Golang",
 	Long:  `Oracle High Availability CLI in Golang`,
@@ -90,7 +90,7 @@ var rootCmd = &cobra.Command{
 func HandleError() {
 	/* Handle `panic` error. */
 	if err := recover(); err != nil {
-		rootCmd.Println(fmt.Sprintf("Error occurred: %s", err))
+		RootCmd.Println(fmt.Sprintf("Error occurred: %s", err))
 	}
 }
 
@@ -103,7 +103,7 @@ func Execute() {
 	defer HandleError()
 
 	// Start the main command
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -132,15 +132,15 @@ func init() {
 
 	// Default value for the working directory
 	_, filename, _, _ := runtime.Caller(0)
-	dir := path.Join(path.Dir(filename), "../../..")
+	dir := path.Join(path.Dir(filename), "../..")
 
 	// Persistent flags, these can be forwarded to subcommands
-	rootCmd.PersistentFlags().StringVarP(&workdir, "workdir", "w", dir,
+	RootCmd.PersistentFlags().StringVarP(&workdir, "workdir", "w", dir,
 		"The absolute path of the configuration folder")
-	rootCmd.PersistentFlags().StringVarP(&dsn, "dsn", "d", "localhost",
+	RootCmd.PersistentFlags().StringVarP(&dsn, "dsn", "d", "localhost",
 		"The connection string to use")
 
 	// Local flags, these flags can not be used by subcommands
-	rootCmd.Flags().Bool("config", false, "Show the current configuration")
-	rootCmd.Flags().Bool("ping", false, "Check database connection")
+	RootCmd.Flags().Bool("config", false, "Show the current configuration")
+	RootCmd.Flags().Bool("ping", false, "Check database connection")
 }

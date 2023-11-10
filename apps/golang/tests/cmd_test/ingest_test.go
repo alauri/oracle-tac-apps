@@ -3,16 +3,20 @@ Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
 Tests for the package “ingest.go“.
 */
-package cmd
+package cmd_test
 
-import "bytes"
-import "path"
-import "runtime"
-import "strings"
-import "testing"
+import (
+  "bytes"
+  "path"
+  "runtime"
+  "strings"
+  "testing"
+  
+  "github.com/stretchr/testify/assert"
+  "github.com/DATA-DOG/go-sqlmock"
 
-import "github.com/stretchr/testify/assert"
-import "github.com/DATA-DOG/go-sqlmock"
+  "github.com/alauri/oracle-tac-apps/cmd"
+)
 
 func Test_Ingest_No_Args(t *testing.T) {
 	/* Invoke the command ``ingest`` with no options. */
@@ -30,10 +34,10 @@ func Test_Ingest_No_Args(t *testing.T) {
 
 	actual := new(bytes.Buffer)
 
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest"})
-	rootCmd.Execute()
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest"})
+  cmd.RootCmd.Execute()
 
 	assert.Contains(t, actual.String(), "(2021,'Abu Dhabi','NaT|1|Car 1|Driver 1')")
 	assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
@@ -58,13 +62,13 @@ func Test_Ingest_Args(t *testing.T) {
 
 	actual := new(bytes.Buffer)
 
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest",
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest",
 		"--iters", "5",
 		"--delay", "0.05",
 		"--commit-every", "5"})
-	rootCmd.Execute()
+	cmd.RootCmd.Execute()
 
 	assert.Equal(t, 1, strings.Count(actual.String(), "NaT"))
 	assert.Equal(t, 4, strings.Count(actual.String(), "0 days 00:0"))

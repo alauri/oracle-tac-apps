@@ -2,13 +2,15 @@
 *
 * Unit tests utility for the package `cmd`.
  */
-package cmd
+package cmd_test
 
-import "fmt"
-import "testing"
-
-import "github.com/DATA-DOG/go-sqlmock"
-import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+import (
+  "fmt"
+  "testing"
+  
+  "github.com/DATA-DOG/go-sqlmock"
+  "github.com/alauri/oracle-tac-apps/internal/database"
+)
 
 func setUpDatabase(t *testing.T) (sqlmock.Sqlmock, func(t *testing.T)) {
 	// Create a database mock instance

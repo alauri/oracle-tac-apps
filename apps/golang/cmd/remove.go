@@ -15,10 +15,10 @@ import "time"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
-import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+import "github.com/alauri/oracle-tac-apps/internal/database"
 
 // removeCmd represents the delete command
-var removeCmd = &cobra.Command{
+var RemoveCmd = &cobra.Command{
 	Use:   "remove",
 	Short: "Delete records from the table.",
 	Long:  `Delete records from the table.`,
@@ -72,10 +72,10 @@ var removeCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(removeCmd)
+	RootCmd.AddCommand(RemoveCmd)
 
-	removeCmd.Flags().Bool("loop", false, "repeat the same operation forever")
-	removeCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
-	removeCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
-	removeCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
+	RemoveCmd.Flags().Bool("loop", false, "repeat the same operation forever")
+	RemoveCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
+	RemoveCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
+	RemoveCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
 }

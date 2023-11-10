@@ -3,16 +3,20 @@ Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
 Tests for the package “root.go“
 */
-package cmd
+package cmd_test
 
-import "bytes"
-import "path"
-import "runtime"
-import "testing"
-import "strings"
+import (
+  "bytes"
+  "path"
+  "runtime"
+  "testing"
+  "strings"
+  
+  "github.com/stretchr/testify/assert"
+  "github.com/DATA-DOG/go-sqlmock"
 
-import "github.com/stretchr/testify/assert"
-import "github.com/DATA-DOG/go-sqlmock"
+  "github.com/alauri/oracle-tac-apps/cmd"
+)
 
 func Test_Root_usage(t *testing.T) {
 	// Invoke the CLI with no commands, expecting an 'Usage ...' message
@@ -21,10 +25,10 @@ func Test_Root_usage(t *testing.T) {
 	static := path.Join(path.Dir(filename), "../static")
 
 	actual := new(bytes.Buffer)
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static})
-	rootCmd.Execute()
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static})
+  cmd.RootCmd.Execute()
 
 	assert.Contains(t, actual.String(), "oracle-tac-go [flags]")
 }
@@ -36,10 +40,10 @@ func Test_Root_config(t *testing.T) {
 	static := path.Join(path.Dir(filename), "../static")
 
 	actual := new(bytes.Buffer)
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "--config"})
-	rootCmd.Execute()
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "--config"})
+  cmd.RootCmd.Execute()
 
 	assert.Contains(t, actual.String(), "{")
 	assert.NotContains(t, actual.String(), "Usage:")
@@ -58,10 +62,10 @@ func Test_Root_ping(t *testing.T) {
 	static := path.Join(path.Dir(filename), "../static")
 
 	actual := new(bytes.Buffer)
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "--ping"})
-	rootCmd.Execute()
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "--ping"})
+  cmd.RootCmd.Execute()
 
 	assert.Contains(t, actual.String(), "[+] - Database reachable")
 	assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
@@ -74,9 +78,9 @@ func Test_Root_error(t *testing.T) {
 	static := path.Join(path.Dir(filename), "../static")
 
 	actual := new(bytes.Buffer)
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "wrong", "ingest"})
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "wrong", "ingest"})
 
-	assert.PanicsWithValue(t, "Invalid value for '-d/--dsn'", func() { rootCmd.Execute() })
+	assert.PanicsWithValue(t, "Invalid value for '-d/--dsn'", func() { cmd.RootCmd.Execute() })
 }

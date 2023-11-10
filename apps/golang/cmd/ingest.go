@@ -18,10 +18,10 @@ import "time"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
-import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+import "github.com/alauri/oracle-tac-apps/internal/database"
 
 // ingestCmd represents the ingest command
-var ingestCmd = &cobra.Command{
+var IngestCmd = &cobra.Command{
 	Use:   "ingest",
 	Short: "Insert new records into the table",
 	Long:  `Insert new records into the table`,
@@ -82,9 +82,9 @@ var ingestCmd = &cobra.Command{
 func init() {
 	/* Define ingest command's flags.
 	 */
-	rootCmd.AddCommand(ingestCmd)
+	RootCmd.AddCommand(IngestCmd)
 
-	ingestCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
-	ingestCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
-	ingestCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
+	IngestCmd.Flags().Int("iters", 1, "repeat the same operation a given number of times")
+	IngestCmd.Flags().Float64("delay", 0.25, "time to wait before the next iteration")
+	IngestCmd.Flags().Int("commit-every", 1, "after how many operations perform a commit")
 }

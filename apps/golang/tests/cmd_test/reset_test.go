@@ -3,16 +3,20 @@ Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
 Tests for the package “reset.go“
 */
-package cmd
+package cmd_test
 
-import "bytes"
-import "path"
-import "runtime"
-import "strings"
-import "testing"
+import (
+  "bytes"
+  "path"
+  "runtime"
+  "strings"
+  "testing"
+  
+  "github.com/stretchr/testify/assert"
+  "github.com/DATA-DOG/go-sqlmock"
 
-import "github.com/stretchr/testify/assert"
-import "github.com/DATA-DOG/go-sqlmock"
+  "github.com/alauri/oracle-tac-apps/cmd"
+)
 
 func Test_Reset_No_Args(t *testing.T) {
 	/* Invoke the command ``reset`` with no options. */
@@ -31,10 +35,10 @@ func Test_Reset_No_Args(t *testing.T) {
 
 	actual := new(bytes.Buffer)
 
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "reset"})
-	rootCmd.Execute()
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "reset"})
+  cmd.RootCmd.Execute()
 
 	assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
 	assert.Equal(t, 2, strings.Count(actual.String(), "TRUNCATE TABLE"))

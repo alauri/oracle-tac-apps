@@ -3,16 +3,20 @@ Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
 
 Tests for the package “remove.go“
 */
-package cmd
+package cmd_test
 
-import "bytes"
-import "path"
-import "runtime"
-import "strings"
-import "testing"
+import (
+  "bytes"
+  "path"
+  "runtime"
+  "strings"
+  "testing"
+  
+  "github.com/stretchr/testify/assert"
+  "github.com/DATA-DOG/go-sqlmock"
 
-import "github.com/stretchr/testify/assert"
-import "github.com/DATA-DOG/go-sqlmock"
+  "github.com/alauri/oracle-tac-apps/cmd"
+)
 
 func Test_Remove_No_Args(t *testing.T) {
 	// Invoke the command ``remove`` with no options.
@@ -30,11 +34,11 @@ func Test_Remove_No_Args(t *testing.T) {
 
 	actual := new(bytes.Buffer)
 
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "remove",
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "remove",
 		"--delay", "0.05"})
-	rootCmd.Execute()
+	cmd.RootCmd.Execute()
 
 	assert.Equal(t, 1, strings.Count(actual.String(), "FROM json_tel WHERE LapTime='NaT'"))
 	assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
@@ -48,24 +52,23 @@ func Test_Remove_With_Args(t *testing.T) {
 	defer tearDownDatabase(t)
 
 	mock.ExpectBegin()
-        mock.ExpectExec("DELETE FROM")
-        mock.ExpectCommit()
+	mock.ExpectExec("DELETE FROM")
+	mock.ExpectCommit()
 	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
 	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
-
 
 	_, filename, _, _ := runtime.Caller(0)
 	static := path.Join(path.Dir(filename), "../static")
 
 	actual := new(bytes.Buffer)
 
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "remove",
+  cmd.RootCmd.SetOut(actual)
+  cmd.RootCmd.SetErr(actual)
+  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "remove",
 		"--iters", "5",
 		"--delay", "0.05",
 		"--commit-every", "2"})
-	rootCmd.Execute()
+	cmd.RootCmd.Execute()
 
 	assert.Equal(t, 5, strings.Count(actual.String(), "FROM json_tel WHERE LapTime='NaT'"))
 	assert.Equal(t, 3, strings.Count(actual.String(), "COMMIT"))

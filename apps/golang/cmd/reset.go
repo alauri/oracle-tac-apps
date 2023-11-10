@@ -8,10 +8,10 @@ import "fmt"
 import "github.com/spf13/cobra"
 import "github.com/spf13/viper"
 
-import "github.com/alauri/oracle-tac-apps/oracle-tac/database"
+import "github.com/alauri/oracle-tac-apps/internal/database"
 
 // resetCmd represents the reset command
-var resetCmd = &cobra.Command{
+var ResetCmd = &cobra.Command{
 	Use:   "reset",
 	Short: "Reset database data to factory.",
 	Long:  `Reset database data to factory.`,
@@ -49,5 +49,5 @@ var resetCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(resetCmd)
+	RootCmd.AddCommand(ResetCmd)
 }
