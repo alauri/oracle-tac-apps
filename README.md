@@ -31,7 +31,8 @@ The project is split into two parts:
  - **apps**: folder with example applications in different programming
    languages;
  - **orchestrate**: the IT automantion tool to deploy all or some of the
-   applications on the remotes you want.
+   applications on the remotes you want;
+ - **producer**: the data generator.
 
 
 [^1]: https://docs.oracle.com/en/database/oracle/oracle-database/19/haovw/overview-of-ha.html
