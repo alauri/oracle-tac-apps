@@ -33,9 +33,3 @@ tac = """(DESCRIPTION = \
          (ADDRESS=(PROTOCOL=TCP)(HOST=vmdb02)(PORT=1521))) \
          (CONNECT_DATA=(SERVICE_NAME = mygoodappsvc))) \
 """
-
-[ingest]
-dumpfile = "../raw.txt"
-
-[cleanup]
-# This section is empty because filled at run-time

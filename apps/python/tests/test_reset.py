@@ -9,17 +9,19 @@ from otac.cli import cli
 from tests.factory import MockResponse
 
 
-def test_no_args(mocker, runner, static) -> None:
+def test_cmd(mocker, runner) -> None:
     """Invoke the command ``reset`` with no options.
 
     Returns:
         Nothing
     """
-    MockResponse.fetchone = mocker.Mock(side_effect=[
-        ('server1', 'vm1'), (1, ), (0, ),
-        ('server1', 'vm1'), (1, ), (0, ),
-    ])
-    result = runner.invoke(cli, ["-w", static, '-d', 'localhost', 'reset'])
+    MockResponse.fetchone = mocker.Mock(
+        side_effect=[
+            ("server1", "vm1"),
+            ("server1", "vm1"),
+        ]
+    )
+    result = runner.invoke(cli, ["-d", "localhost", "reset"])
 
     assert result.exit_code == 0
     assert result.output.count("('server1', 'vm1')") == 2
