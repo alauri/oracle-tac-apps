@@ -57,6 +57,7 @@ def wrap_every_test(mocker):
     """
     # Setup: fill with any logic you want
     mocker.patch("cx_Oracle.connect", return_value=factory.MockOracle())
+    mocker.patch("socket.socket", return_value=factory.MockUDPServer())
 
     yield
 

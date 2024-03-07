@@ -12,3 +12,7 @@ examples/golang/oha/oracle-ha
 # Java ignore files
 examples/java/oha/target
 *.class
+
+
+# Executable
+otac-*
