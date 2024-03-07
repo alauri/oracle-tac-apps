@@ -1,27 +1,20 @@
-/*
-Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
-
-Tests for the package “ingest.go“.
-*/
-package cmd_test
+package cmd
 
 import (
-  "bytes"
-  "path"
-  "runtime"
-  "strings"
-  "testing"
-  
-  "github.com/stretchr/testify/assert"
-  "github.com/DATA-DOG/go-sqlmock"
+	"bytes"
+	"strings"
+	"testing"
 
-  "github.com/alauri/oracle-tac-apps/cmd"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/alauri/oracle-tac-apps/internal/tests"
 )
 
-func Test_Ingest_No_Args(t *testing.T) {
+func TestIngestNoArgs(t *testing.T) {
 	/* Invoke the command ``ingest`` with no options. */
-	mock, tearDownDatabase := setUpDatabase(t)
-	defer tearDownDatabase(t)
+	mock, tearDownDatabase := tests.MockDatabase()
+	defer tearDownDatabase()
 
 	mock.ExpectBegin()
 	mock.ExpectExec("INSERT INTO raw_tel")
@@ -29,27 +22,24 @@ func Test_Ingest_No_Args(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
 	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
 
-	_, filename, _, _ := runtime.Caller(0)
-	static := path.Join(path.Dir(filename), "../static")
-
 	actual := new(bytes.Buffer)
 
-  cmd.RootCmd.SetOut(actual)
-  cmd.RootCmd.SetErr(actual)
-  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest"})
-  cmd.RootCmd.Execute()
+	RootCmd.SetOut(actual)
+	RootCmd.SetErr(actual)
+	RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest"})
+	RootCmd.Execute()
 
 	assert.Contains(t, actual.String(), "(2021,'Abu Dhabi','NaT|1|Car 1|Driver 1')")
 	assert.Equal(t, 1, strings.Count(actual.String(), "COMMIT"))
 	assert.Equal(t, 2, strings.Count(actual.String(), "('server1', 'vm1')"))
 }
 
-func Test_Ingest_Args(t *testing.T) {
+func TestIngestArgs(t *testing.T) {
 	/* Invoke the command ``ingest`` by iterating over the input to store
 	 * read data.
 	 */
-	mock, tearDownDatabase := setUpDatabase(t)
-	defer tearDownDatabase(t)
+	mock, tearDownDatabase := tests.MockDatabase()
+	defer tearDownDatabase()
 
 	mock.ExpectBegin()
 	mock.ExpectExec("INSERT INTO raw_tel")
@@ -57,18 +47,17 @@ func Test_Ingest_Args(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"uname", "host"}).AddRow("server1", "vm1")
 	mock.ExpectQuery("^SELECT SYS_CONTEXT").WillReturnRows(rows)
 
-	_, filename, _, _ := runtime.Caller(0)
-	static := path.Join(path.Dir(filename), "../static")
-
 	actual := new(bytes.Buffer)
 
-  cmd.RootCmd.SetOut(actual)
-  cmd.RootCmd.SetErr(actual)
-  cmd.RootCmd.SetArgs([]string{"-w", static, "-d", "localhost", "ingest",
+	RootCmd.SetOut(actual)
+	RootCmd.SetErr(actual)
+	RootCmd.SetArgs([]string{
+		"-w", static, "-d", "localhost", "ingest",
 		"--iters", "5",
 		"--delay", "0.05",
-		"--commit-every", "5"})
-	cmd.RootCmd.Execute()
+		"--commit-every", "5",
+	})
+	RootCmd.Execute()
 
 	assert.Equal(t, 1, strings.Count(actual.String(), "NaT"))
 	assert.Equal(t, 4, strings.Count(actual.String(), "0 days 00:0"))

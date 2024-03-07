@@ -1,18 +1,15 @@
-/* Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
-*
-* Unit tests utility for the package `cmd`.
- */
-package cmd_test
+package tests
 
 import (
-  "fmt"
-  "testing"
-  
-  "github.com/DATA-DOG/go-sqlmock"
-  "github.com/alauri/oracle-tac-apps/internal/database"
+	"fmt"
+
+	"github.com/DATA-DOG/go-sqlmock"
+
+	"github.com/alauri/oracle-tac-apps/internal/database"
 )
 
-func setUpDatabase(t *testing.T) (sqlmock.Sqlmock, func(t *testing.T)) {
+// MockDatabase mock the database connection
+func MockDatabase() (sqlmock.Sqlmock, func()) {
 	// Create a database mock instance
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -25,12 +22,12 @@ func setUpDatabase(t *testing.T) (sqlmock.Sqlmock, func(t *testing.T)) {
 
 	// Mocking the connection function by returning a mocked database
 	// instance
-	database.Connect = func(username string, password string, dsn string) {
+	database.Connect = func(string, string, string) {
 		database.Db = db
 	}
 
 	// TearDown function to return and use later within the tests
-	return mock, func(t *testing.T) {
+	return mock, func() {
 		db.Close()
 	}
 }

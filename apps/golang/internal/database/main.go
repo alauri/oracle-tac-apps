@@ -1,14 +1,11 @@
-/*
-Copyright © 2022 Andrea Lauri <andrea.lauri86@gmail.com>
-
-Package for database utility.
-*/
 package database
 
-import "fmt"
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
 
-import _ "github.com/godror/godror"
+	_ "github.com/godror/godror"
+)
 
 var Db *sql.DB
 

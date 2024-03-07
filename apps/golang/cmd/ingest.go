@@ -9,16 +9,18 @@ after how many operations commit the changes.
 */
 package cmd
 
-import "fmt"
-import "io/ioutil"
-import "strings"
-import "path"
-import "time"
+import (
+	"fmt"
+	"io/ioutil"
+	"path"
+	"strings"
+	"time"
 
-import "github.com/spf13/cobra"
-import "github.com/spf13/viper"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
-import "github.com/alauri/oracle-tac-apps/internal/database"
+	"github.com/alauri/oracle-tac-apps/internal/database"
+)
 
 // ingestCmd represents the ingest command
 var IngestCmd = &cobra.Command{
@@ -35,7 +37,7 @@ var IngestCmd = &cobra.Command{
 		table := viper.GetViper().GetString("database.tableraw")
 
 		// Open the file and check error
-		data, err := ioutil.ReadFile(path.Join(workdir, "../../../raw.txt"))
+		data, err := ioutil.ReadFile(path.Join(workdir, "../../../../raw.txt"))
 		if err != nil {
 			panic(err)
 		}
