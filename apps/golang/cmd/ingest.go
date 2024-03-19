@@ -37,7 +37,7 @@ var IngestCmd = &cobra.Command{
 		table := viper.GetViper().GetString("database.tableraw")
 
 		// Open the file and check error
-		data, err := ioutil.ReadFile(path.Join(workdir, "../../../../raw.txt"))
+		data, err := ioutil.ReadFile(path.Join(workdir, "./raw.txt"))
 		if err != nil {
 			panic(err)
 		}

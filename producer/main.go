@@ -74,7 +74,9 @@ func main() {
 
 		// Add a new progress bar
 		pbname := fmt.Sprintf("%10s client", strings.Trim(string(buffer), "\u0000"))
-		pb, _ := pterm.DefaultProgressbar.WithTotal(numEvents).WithWriter(multi.NewWriter()).Start(pbname)
+		pb, _ := pterm.DefaultProgressbar.WithTotal(numEvents).
+			WithWriter(multi.NewWriter()).
+			Start(pbname)
 
 		// Spawn a new goroutine for the new incoming connection
 		go producer(server, address, pb)
@@ -82,7 +84,6 @@ func main() {
 }
 
 func producer(s net.PacketConn, a net.Addr, pb *pterm.ProgressbarPrinter) {
-
 	// Send the number of events requested
 	for i := 0; i < numEvents; i++ {
 		s.WriteTo([]byte(events[rand.Intn(len(events))]), a)
